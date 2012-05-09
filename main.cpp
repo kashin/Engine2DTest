@@ -1,5 +1,6 @@
-#include <irrlicht/irrlicht.h>
-#include <eventreceiver.h>
+#include <irrlicht.h>
+#include "eventreceiver.h"
+#include "field.h"
 
 using namespace irr;
 
@@ -11,7 +12,7 @@ using namespace gui;
 
 int main()
 {
-        IrrlichtDevice * device = createDevice(EDT_OPENGL, core::dimension2d<u32>(800, 600));
+        IrrlichtDevice * device = createDevice(EDT_OPENGL, core::dimension2d<u32>(1024, 768));
 
         if (device == 0)
                 return 1; // could not create selected driver.
@@ -23,6 +24,7 @@ int main()
         device->setResizable(true);
 
         video::IVideoDriver* driver = device->getVideoDriver();
+//        scene::ISceneManager* scene = device->getSceneManager(); // we are always can show any 3D mesh with 2D graphic
         IGUIEnvironment* env = device->getGUIEnvironment();
 
         /*
@@ -74,24 +76,19 @@ int main()
         env->addEditBox(L"Editable Text", rect<s32>(350, 80, 550, 100));
 
         // Store the appropriate data in a context structure.
+
+        Field* field = new Field(driver);
         SAppContext context;
         context.device = device;
         context.counter = 0;
         context.listbox = listbox;
+        context.field = field;
 
         // Then create the event receiver, giving it that context structure.
         EventReceiver receiver(context);
 
         // And tell the device to use our custom event receiver.
         device->setEventReceiver(&receiver);
-
-
-        /*
-        And at last, we create a nice Irrlicht Engine logo in the top left corner.
-        */
-        env->addImage(driver->getTexture("../../media/irrlichtlogo2.png"),
-                        position2d<int>(10,10));
-
 
         /*
         That's all, we only have to draw everything.
@@ -102,11 +99,14 @@ int main()
         {
                 driver->beginScene(true, true, SColor(0,200,200,200));
 
-                env->drawAll();
+                field->draw();
+//                env->drawAll();
 
                 driver->endScene();
         }
 
+        context.field = 0;
+        delete field;
         device->drop();
 
         return 0;

@@ -1,15 +1,16 @@
 #ifndef EVENTRECEIVER_H
 #define EVENTRECEIVER_H
 
-#include <irrlicht/IEventReceiver.h>
+#include <IEventReceiver.h>
 
 namespace irr {
     class IrrlichtDevice;
     namespace gui {
-    class IGUIListBox;
+        class IGUIListBox;
     }
 }
 
+class Field;
 // Declare a structure to hold some context for the event receiver so that it
 // has it available inside its OnEvent() method.
 
@@ -18,6 +19,7 @@ struct SAppContext
         irr::IrrlichtDevice *device;
         irr::s32 counter;
         irr::gui::IGUIListBox *listbox;
+        Field* field;
 };
 
 // Define some values that we'll use to identify individual GUI controls.
@@ -33,6 +35,7 @@ class EventReceiver : public irr::IEventReceiver
 {
 public:
         EventReceiver(SAppContext & context);
+        ~EventReceiver();
 
         virtual bool OnEvent(const irr::SEvent& event);
 
