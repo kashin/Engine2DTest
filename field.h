@@ -13,6 +13,10 @@ namespace video {
 
 class Character;
 
+//! This is a game field class.
+/** This class handles some events and moves it to appropriate objects (like characters).
+    It is some kind of a Scene manager. It draws all objects on the Game Field
+  */
 class Field
 {
 public:

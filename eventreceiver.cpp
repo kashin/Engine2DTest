@@ -113,12 +113,20 @@ bool EventReceiver::OnEvent(const SEvent &event)
                 {
                     if (mContext.field)
                         mContext.field->newEvent(event);
-                    break;
+                    return true;
                 }
                 default:
                     break;
             }
             break;
+        }
+    case EET_KEY_INPUT_EVENT:
+        {
+            if (event.KeyInput.Key == KEY_ESCAPE)
+            {
+                mContext.device->closeDevice();
+                return true;
+            }
         }
     default:
          break;

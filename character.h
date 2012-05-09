@@ -5,6 +5,7 @@
 #include <vector2d.h>
 #include <path.h>
 #include <irrTypes.h>
+#include <irrList.h>
 
 namespace irr {
     namespace video {
@@ -12,6 +13,8 @@ namespace irr {
         class IVideoDriver;
     }
 }
+
+class Animator2D;
 
 class Character
 {
@@ -22,8 +25,10 @@ public:
     const irr::io::path textureName() const { return mTextureName; }
     void setTextureName(const irr::io::path& textureName);
 
-    const irr::core::vector2d<irr::s32> getPosition() const { return mCurrentPosition; }
-    void setPosition(irr::core::vector2d<irr::s32> position);
+    virtual const irr::core::vector2d<irr::s32> getPosition() const { return mCurrentPosition; }
+    virtual void setPosition(irr::core::vector2d<irr::s32> position);
+
+    void addAnimator(Animator2D* animator);
 
     virtual void draw();
 
@@ -34,6 +39,7 @@ private:
     irr::io::path mTextureName;
     irr::core::vector2d<irr::s32> mCurrentPosition;
     irr::video::ITexture* mTexture;
+    irr::core::list<Animator2D*> mAnimations;
 };
 
 #endif // CHARACTER_H

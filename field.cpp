@@ -1,5 +1,6 @@
 #include "field.h"
 #include "character.h"
+#include "movetoanimator2d.h"
 
 #include <irrlicht.h>
 
@@ -38,16 +39,20 @@ void Field::draw()
 
 void Field::newEvent(const SEvent &event)
 {
-    switch(event.EventType)
+    if (mCharacter)
     {
-    case EET_MOUSE_INPUT_EVENT:
+        switch(event.EventType)
+        {
+        case EET_MOUSE_INPUT_EVENT:
         {
             switch(event.MouseInput.Event)
             {
-                case EMIE_LMOUSE_PRESSED_DOWN:
+            case EMIE_LMOUSE_PRESSED_DOWN:
                 {
-                    if (mCharacter)
-                        mCharacter->setPosition(vector2d<s32>(event.MouseInput.X, event.MouseInput.Y));
+                    {
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveTo, mCharacter->getPosition(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 200);
+                        mCharacter->addAnimator(animator);
+                    }
                     break;
                 }
                 default:
@@ -55,8 +60,9 @@ void Field::newEvent(const SEvent &event)
             }
             break;
         }
-    default:
-        break;
+        default:
+            break;
+        }
     }
 }
 
