@@ -4,7 +4,11 @@ PKGCONFIG += libIrrlicht
 LIBS += -lIrrlicht
 
 SOURCES += main.cpp \
-    eventreceiver.cpp
+    eventreceiver.cpp \
+    character.cpp \
+    field.cpp
 
 HEADERS += \
-    eventreceiver.h
+    eventreceiver.h \
+    character.h \
+    field.h
