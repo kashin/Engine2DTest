@@ -8,7 +8,7 @@ class Animator2D
 {
 public:
     enum AnimationType {
-        MoveTo = 0
+        MoveToAnimation = 0
     };
 
     explicit Animator2D(AnimationType type);

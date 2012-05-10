@@ -1,7 +1,7 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include <path.h>
+#include <irrlicht/path.h>
 
 namespace irr {
 namespace video {

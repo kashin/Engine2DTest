@@ -1,7 +1,7 @@
 #ifndef EVENTRECEIVER_H
 #define EVENTRECEIVER_H
 
-#include <IEventReceiver.h>
+#include <irrlicht/IEventReceiver.h>
 
 namespace irr {
     class IrrlichtDevice;
@@ -16,7 +16,7 @@ class Field;
 
 struct SAppContext
 {
-        irr::IrrlichtDevice *device;
+        irr::IrrlichtDevice* device;
         irr::s32 counter;
         irr::gui::IGUIListBox *listbox;
         Field* field;

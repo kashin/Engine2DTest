@@ -1,7 +1,7 @@
 #include "character.h"
 #include "animator2d.h"
 
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 #include <QDebug>
 
 using namespace irr;
@@ -50,6 +50,17 @@ void Character::setPosition(vector2d<s32> position)
 
 void Character::addAnimator(Animator2D *animator)
 {
+    irr::core::list< Animator2D* >::Iterator it = mAnimations.begin();
+    irr::core::list< Animator2D* >::Iterator end = mAnimations.end();
+    while (it != end)
+    {
+        if ((*it)->type() == animator->type())
+        {
+            delete (*it);
+            mAnimations.erase(it);
+            break;
+        }
+    }
     mAnimations.push_front(animator);
 }
 

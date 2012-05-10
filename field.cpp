@@ -2,7 +2,7 @@
 #include "character.h"
 #include "movetoanimator2d.h"
 
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 
 using namespace irr;
 
@@ -50,7 +50,7 @@ void Field::newEvent(const SEvent &event)
             case EMIE_LMOUSE_PRESSED_DOWN:
                 {
                     {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveTo, mCharacter->getPosition(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 200);
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->getPosition(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 150);
                         mCharacter->addAnimator(animator);
                     }
                     break;
