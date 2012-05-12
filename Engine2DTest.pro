@@ -1,7 +1,7 @@
+QT -= gui
 CONFIG += link_pkgconfig
-PKGCONFIG += libIrrlicht
 
-LIBS += -lIrrlicht
+LIBS += -lIrrlicht -llua5.2
 
 SOURCES += main.cpp \
     eventreceiver.cpp \
@@ -16,3 +16,6 @@ HEADERS += \
     field.h \
     animator2d.h \
     movetoanimator2d.h
+
+OTHER_FILES += \
+    config.lua
