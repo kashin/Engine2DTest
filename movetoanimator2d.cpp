@@ -1,9 +1,10 @@
+#include "field.h"
 #include "movetoanimator2d.h"
 #include "character.h"
 
 #include <QDebug>
 
-#define SKIP_FRAMES 100
+#define SKIP_FRAMES 30
 
 MoveToAnimator2D::MoveToAnimator2D(Animator2D::AnimationType type,
                                    irr::core::vector2d<irr::s32> startPosition,
@@ -19,6 +20,10 @@ MoveToAnimator2D::MoveToAnimator2D(Animator2D::AnimationType type,
     irr::core::vector2d<irr::s32> vec = (mEndPostion - startPosition);
     mSpeedVector = irr::core::vector2d<irr::s32>(vec.X > 0 ? animationSpeed : vec.X == 0 ? 0 : -1 *animationSpeed,
                                                  vec.Y > 0 ? animationSpeed : vec.Y == 0 ? 0 : -1 *animationSpeed);
+}
+
+MoveToAnimator2D::~MoveToAnimator2D()
+{
 }
 
 void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
@@ -38,7 +43,7 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
     {
         mSkipFrames = SKIP_FRAMES;
     }
-    irr::core::vector2d<irr::s32> nextPosition(0,0);
+    irr::core::vector2d<irr::s32> nextPosition = currentPosition + mSpeedVector;
     if ((mSpeedVector.X != 0) && (((currentPosition.X + mSpeedVector.X >= mEndPostion.X ) &&
          (currentPosition.X < mEndPostion.X)) ||
         ((currentPosition.X > mEndPostion.X)&&
@@ -57,17 +62,13 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
         mSpeedVector.Y = 0;
     }
 
-    if ( ((currentPosition + mSpeedVector) >= mEndPostion &&
-          (currentPosition < mEndPostion)) ||
-         ((currentPosition + mSpeedVector) <= mEndPostion &&
-                   (currentPosition > mEndPostion)))
+    if (!Field::instance().isCollided(graphicBlock->getBoundRect() + mSpeedVector))
     {
-        graphicBlock->setPosition(mEndPostion);
-        mFinished = true;
+        graphicBlock->setPosition(nextPosition);
     }
     else
     {
-        graphicBlock->setPosition(currentPosition + mSpeedVector);
+        mFinished = true;
     }
 }
 

@@ -19,7 +19,8 @@ namespace irr {
 class WallBlock: public GraphicBlock
 {
 public:
-    explicit WallBlock(irr::video::IVideoDriver* driver, irr::core::vector2d<irr::s32> position);
+    explicit WallBlock(irr::video::IVideoDriver* driver, irr::core::vector2d<irr::s32> position,
+                       const CollisionType& type = CanCollideType);
     ~WallBlock();
 
     virtual void draw();

@@ -10,8 +10,8 @@ using namespace scene;
 using namespace video;
 using namespace io;
 
-WallBlock::WallBlock(IVideoDriver* driver, vector2d<s32> position)
-    : GraphicBlock(driver)
+WallBlock::WallBlock(IVideoDriver* driver, vector2d<s32> position, const CollisionType& type)
+    : GraphicBlock(driver, type)
 {
     setPosition(position);
 }

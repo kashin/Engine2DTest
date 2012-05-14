@@ -127,6 +127,12 @@ bool EventReceiver::OnEvent(const SEvent &event)
                 mContext.device->closeDevice();
                 return true;
             }
+            else
+            {
+                if (mContext.field)
+                    mContext.field->newEvent(event);
+                return true;
+            }
         }
     default:
          break;

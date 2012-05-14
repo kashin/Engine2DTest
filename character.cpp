@@ -11,8 +11,8 @@ using namespace scene;
 using namespace video;
 using namespace io;
 
-Character::Character(IVideoDriver *driver)
-    : GraphicBlock(driver)
+Character::Character(IVideoDriver *driver, const CollisionType& type)
+    : GraphicBlock(driver, type)
 {
 }
 

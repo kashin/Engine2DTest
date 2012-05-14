@@ -20,7 +20,7 @@ class Animator2D;
 class Character: public GraphicBlock
 {
 public:
-    Character(irr::video::IVideoDriver* driver);
+    Character(irr::video::IVideoDriver* driver, const CollisionType& type = CanCollideType);
     ~Character();
 
     virtual void addAnimator(Animator2D* animator);

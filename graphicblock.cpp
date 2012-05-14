@@ -9,9 +9,10 @@ using namespace scene;
 using namespace video;
 using namespace io;
 
-GraphicBlock::GraphicBlock(IVideoDriver *driver)
+GraphicBlock::GraphicBlock(IVideoDriver *driver, const CollisionType& type)
     : mDriver(driver),
-      mTexture(0)
+      mTexture(0),
+      mCollisionType(type)
 {
     setPosition(vector2d<s32>(0,0));
 }
@@ -45,5 +46,11 @@ void GraphicBlock::draw()
     {
         mDriver->draw2DImage(mTexture, mCurrentPosition - (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)));
     }
+}
+
+const irr::core::rect<irr::s32> GraphicBlock::getBoundRect() const
+{
+    return rect<irr::s32>(mCurrentPosition - (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)),
+                mCurrentPosition + (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)));
 }
 

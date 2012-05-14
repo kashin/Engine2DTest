@@ -4,6 +4,7 @@
 #include <irrlicht/path.h>
 #include <irrlicht/irrTypes.h>
 #include <irrlicht/irrList.h>
+#include <irrlicht/rect.h>
 
 namespace irr {
 namespace video {
@@ -35,6 +36,7 @@ public:
 
     void addWallBlock(const irr::io::path& blocksBackground, const irr::s32& xCoord,
                       const irr::s32& yCoord);
+    bool isCollided(const irr::core::rect<irr::s32>& objRect) const ;
 
 protected:
     irr::video::IVideoDriver* mDriver;

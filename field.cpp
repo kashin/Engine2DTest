@@ -22,6 +22,7 @@ using namespace io;
 
 #define CHARACTER_TEXTURE_PATH "t90.jpg"
 #define BACKGROUND_TEXTURE_PATH "background.jpg"
+#define KEYMOVEPIXELS 6
 
 static Field* field = NULL;
 
@@ -120,13 +121,50 @@ void Field::newEvent(const SEvent &event)
             case EMIE_LMOUSE_PRESSED_DOWN:
                 {
                     {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 5);
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 3);
                         mCharacter->addAnimator(animator);
                     }
                     break;
                 }
                 default:
                     break;
+            }
+            break;
+        }
+        case EET_KEY_INPUT_EVENT:
+        {
+            switch(event.KeyInput.Key)
+            {
+            case KEY_LEFT:
+                {
+                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                      mCharacter->position() + vector2d<s32>(-KEYMOVEPIXELS,0), 3);
+                    mCharacter->addAnimator(animator);
+                    break;
+                }
+            case KEY_RIGHT:
+                {
+                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                          mCharacter->position() + vector2d<s32>(KEYMOVEPIXELS,0), 3);
+                    mCharacter->addAnimator(animator);
+                    break;
+                }
+            case KEY_UP:
+                {
+                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                          mCharacter->position() + vector2d<s32>(0, -KEYMOVEPIXELS), 3);
+                    mCharacter->addAnimator(animator);
+                    break;
+                }
+            case KEY_DOWN:
+                {
+                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                          mCharacter->position() + vector2d<s32>(0, KEYMOVEPIXELS), 3);
+                    mCharacter->addAnimator(animator);
+                    break;
+                }
+            default:
+                break;
             }
             break;
         }
@@ -151,8 +189,23 @@ void Field::setBackground(const path& backgroundPath)
 void Field::addWallBlock(const irr::io::path &blocksBackground, const irr::s32 &xCoord,
                          const irr::s32 &yCoord)
 {
-    qDebug() << Q_FUNC_INFO << blocksBackground.c_str() << xCoord << yCoord;
     WallBlock* wallBlock = new WallBlock(mDriver, vector2d<s32>(xCoord, yCoord));
     wallBlock->setTextureName(blocksBackground);
     mWallBlocks.push_front(wallBlock);
+}
+
+bool Field::isCollided(const irr::core::rect<irr::s32>& objRect) const
+{
+    if (!mWallBlocks.empty())
+    {
+        irr::core::list< WallBlock* >::ConstIterator it = mWallBlocks.begin();
+        irr::core::list< WallBlock* >::ConstIterator end = mWallBlocks.end();
+        while (it != end)
+        {
+            if ((*it)->collisionType() == GraphicBlock::CanCollideType && objRect.isRectCollided((*it)->getBoundRect()))
+                return true;
+            ++it;
+        }
+    }
+    return false;
 }
