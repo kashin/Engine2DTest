@@ -2,6 +2,8 @@
 #define FIELD_H
 
 #include <irrlicht/path.h>
+#include <irrlicht/irrTypes.h>
+#include <irrlicht/irrList.h>
 
 namespace irr {
 namespace video {
@@ -12,6 +14,7 @@ namespace video {
 }
 
 class Character;
+class WallBlock;
 
 //! This is a game field class.
 /** This class handles some events and moves it to appropriate objects (like characters).
@@ -20,21 +23,31 @@ class Character;
 class Field
 {
 public:
-    Field(irr::video::IVideoDriver* driver);
+    static Field & instance();
+    static Field & createField(irr::video::IVideoDriver* driver);
+    static void deleteField();
     ~Field();
 
     void newEvent(const irr::SEvent& event);
     virtual void draw();
 
-    void setBackground(irr::io::path backgroundPath);
+    void setBackground(const irr::io::path& backgroundPath);
+
+    void addWallBlock(const irr::io::path& blocksBackground, const irr::s32& xCoord,
+                      const irr::s32& yCoord);
 
 protected:
     irr::video::IVideoDriver* mDriver;
 
 private:
+    Field(irr::video::IVideoDriver* driver);
+    void init();
+
+private:
     Character* mCharacter;
     irr::io::path mBackgroundTexturePath;
     irr::video::ITexture* mTexture;
+    irr::core::list<WallBlock*> mWallBlocks;
 };
 
 #endif // FIELD_H

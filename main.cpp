@@ -54,12 +54,12 @@ int main()
 
     // Store the appropriate data in a context structure.
 
-    Field* field = new Field(driver);
+    Field& field = Field::createField(driver);
     SAppContext context;
     context.device = device;
     context.counter = 0;
     context.listbox = 0;
-    context.field = field;
+    context.field = &field;
 
     // Then create the event receiver, giving it that context structure.
     EventReceiver receiver(context);
@@ -75,13 +75,13 @@ int main()
         {
             driver->beginScene(true, true, SColor(0,200,200,200));
 
-            field->draw();
+            field.draw();
 
             driver->endScene();
         }
 
     context.field = 0;
-    delete field;
+    Field::deleteField();
     device->drop();
 
     return 0;
