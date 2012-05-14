@@ -11,39 +11,19 @@ using namespace video;
 using namespace io;
 
 WallBlock::WallBlock(IVideoDriver* driver, vector2d<s32> position)
-    : mDriver(driver),
-      mTexture(0)
+    : GraphicBlock(driver)
 {
     setPosition(position);
 }
 
 WallBlock::~WallBlock()
 {
-    if (mTexture)
-        delete mTexture;
-}
-
-void WallBlock::setTextureName(const path &textureName)
-{
-    mTextureName = textureName;
-    if (mTexture)
-    {
-        delete mTexture;
-        mTexture = 0;
-    }
-    if (mDriver)
-        mTexture = mDriver->getTexture(mTextureName);
-}
-
-void WallBlock::setPosition(vector2d<s32> position)
-{
-    mCurrentPosition = position;
 }
 
 void WallBlock::draw()
 {
-    if (mTexture && mDriver)
+    if (texture() && mDriver)
     {
-        mDriver->draw2DImage(mTexture, mCurrentPosition - (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)));
+        mDriver->draw2DImage(texture(), position() - (vector2d<s32>(texture()->getSize().Width/2, texture()->getSize().Height/2)));
     }
 }

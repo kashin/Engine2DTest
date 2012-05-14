@@ -120,7 +120,7 @@ void Field::newEvent(const SEvent &event)
             case EMIE_LMOUSE_PRESSED_DOWN:
                 {
                     {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->getPosition(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 150);
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 5);
                         mCharacter->addAnimator(animator);
                     }
                     break;

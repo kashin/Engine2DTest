@@ -13,7 +13,7 @@ public:
                               irr::core::vector2d<irr::s32> moveToPosition,
                               irr::s32 animationSpeed);
 
-    virtual void runAnimation(Character* character);
+    virtual void runAnimation(GraphicBlock* character);
 
     virtual bool animationFinished();
 

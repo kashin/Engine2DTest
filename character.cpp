@@ -12,16 +12,12 @@ using namespace video;
 using namespace io;
 
 Character::Character(IVideoDriver *driver)
-    : mDriver(driver),
-      mTexture(0)
+    : GraphicBlock(driver)
 {
-    setPosition(vector2d<s32>(0,0));
 }
 
 Character::~Character()
 {
-    if (mTexture)
-        delete mTexture;
     irr::core::list< Animator2D* >::ConstIterator it = mAnimations.begin();
     irr::core::list< Animator2D* >::ConstIterator end = mAnimations.end();
     while (it != end)
@@ -29,23 +25,6 @@ Character::~Character()
         delete *it;
         ++it;
     }
-}
-
-void Character::setTextureName(const path &textureName)
-{
-    mTextureName = textureName;
-    if (mTexture)
-    {
-        delete mTexture;
-        mTexture = 0;
-    }
-    if (mDriver)
-        mTexture = mDriver->getTexture(mTextureName);
-}
-
-void Character::setPosition(vector2d<s32> position)
-{
-    mCurrentPosition = position;
 }
 
 void Character::addAnimator(Animator2D *animator)
@@ -90,8 +69,8 @@ void Character::draw()
             ++iter;
         }
     }
-    if (mTexture && mDriver)
+    if (mDriver && texture())
     {
-        mDriver->draw2DImage(mTexture, mCurrentPosition - (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)));
+        mDriver->draw2DImage(texture(), position() - (vector2d<s32>(texture()->getSize().Width/2, texture()->getSize().Height/2)));
     }
 }

@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     field.cpp \
     animator2d.cpp \
     movetoanimator2d.cpp \
-    wallblock.cpp
+    wallblock.cpp \
+    graphicblock.cpp
 
 HEADERS += \
     eventreceiver.h \
@@ -17,7 +18,8 @@ HEADERS += \
     field.h \
     animator2d.h \
     movetoanimator2d.h \
-    wallblock.h
+    wallblock.h \
+    graphicblock.h
 
 OTHER_FILES += \
     config.lua \
