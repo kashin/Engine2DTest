@@ -1,4 +1,5 @@
-1) Layers??? List that contains an elements for a different "levels" of the scene.
-2) Menu items.
-3) Highlighted menu items and character.
-4) New animations for walls (and explosions).
+1) Move all event handling in the GraphicBox with call of the virtual functions like KeyInputEvent, MouseEvent, etc.
+2) Layers??? List that contains an elements for a different "levels" of the scene.
+3) Menu items.
+4) Highlighted menu items and character.
+5) New animations for walls (and explosions).

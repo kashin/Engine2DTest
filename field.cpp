@@ -33,7 +33,7 @@ int l_addWallBlock(lua_State* luaState)
    path background = lua_tostring(luaState, -3);
    s32 x = lua_tonumber(luaState, -2);
    s32 y = lua_tonumber(luaState, -1);
-   field->addWallBlock(background, x, y);
+   Field::instance().addWallBlock(background, x, y);
    return 1;
 }
 
@@ -42,7 +42,7 @@ int l_setCharacterPosition(lua_State* luaState)
 {
     s32 x = lua_tonumber(luaState, -2);
     s32 y = lua_tonumber(luaState, -1);
-    field->setCharacterPosition(x, y);
+    Field::instance().setCharacterPosition(x, y);
     return 1;
 }
 

@@ -67,9 +67,6 @@ int main()
     // And tell the device to use our custom event receiver.
     device->setEventReceiver(&receiver);
 
-    driver->getMaterial2D().TextureLayer[0].BilinearFilter=true;
-    driver->getMaterial2D().AntiAliasing=EAAM_FULL_BASIC;
-
     while(device->run() && driver)
         if (device->isWindowActive())
         {

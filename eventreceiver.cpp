@@ -125,14 +125,13 @@ bool EventReceiver::OnEvent(const SEvent &event)
             if (event.KeyInput.Key == KEY_ESCAPE)
             {
                 mContext.device->closeDevice();
-                return true;
             }
             else
             {
                 if (mContext.field)
                     mContext.field->newEvent(event);
-                return true;
             }
+            return true;
         }
     default:
          break;
