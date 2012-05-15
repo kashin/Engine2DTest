@@ -134,11 +134,11 @@ void Field::draw()
         irr::core::list< WallBlock* >::Iterator end = mWallBlocks.end();
         while (it != end)
         {
-            (*it)->draw();
+            (*it)->drawAll();
             ++it;
         }
     }
-    mCharacter->draw();
+    mCharacter->drawAll();
 }
 
 void Field::newEvent(const SEvent &event)

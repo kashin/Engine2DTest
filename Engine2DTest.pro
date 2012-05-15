@@ -23,4 +23,5 @@ HEADERS += \
 
 OTHER_FILES += \
     config.lua \
-    generate_field.lua
+    generate_field.lua \
+    TODO

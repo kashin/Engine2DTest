@@ -14,6 +14,8 @@ namespace irr {
     }
 }
 
+class Animator2D;
+
 class GraphicBlock
 {
 public:
@@ -33,9 +35,11 @@ public:
     const irr::core::vector2d<irr::s32> position() const { return mCurrentPosition; }
     virtual void setPosition(irr::core::vector2d<irr::s32> position);
 
-    virtual void draw();
-
     virtual const irr::core::rect<irr::s32> getBoundRect() const;
+
+    virtual void addAnimator(Animator2D* animator);
+    virtual void draw();
+    void drawAll();
 
 protected:
     const irr::video::ITexture* texture() const { return mTexture; }
@@ -47,6 +51,7 @@ private:
     irr::io::path mTextureName;
     irr::core::vector2d<irr::s32> mCurrentPosition;
     irr::video::ITexture* mTexture;
+    irr::core::list<Animator2D*> mAnimations;
     CollisionType mCollisionType;
 };
 

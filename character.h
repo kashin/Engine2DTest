@@ -16,16 +16,12 @@ namespace irr {
     class SEvent;
 }
 
-class Animator2D;
-
 //! This class representing a character(for example a tank) on the field.
 class Character: public GraphicBlock
 {
 public:
     Character(irr::video::IVideoDriver* driver, const CollisionType& type = CanCollideType);
     ~Character();
-
-    virtual void addAnimator(Animator2D* animator);
 
     virtual void draw();
 
@@ -37,7 +33,6 @@ private:
     void closeMenu();
 
 private:
-    irr::core::list<Animator2D*> mAnimations;
     bool mShowMenu;
 };
 
