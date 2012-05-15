@@ -1,8 +1,12 @@
--- generating maze
+-- generating maze and placing character on the right place
 
 value = nil;
-xPosition = 100;
-yPosition = 100;
+xPosition = 150;
+yPosition = 150;
+
+-- Put character on the map
+setCharacterPosition(xPosition, yPosition - 65);
+
  -- Top wall
 endPosition = xPosition + 400
 for i = xPosition, endPosition , 64

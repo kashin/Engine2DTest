@@ -22,17 +22,28 @@ using namespace io;
 
 #define CHARACTER_TEXTURE_PATH "t90.jpg"
 #define BACKGROUND_TEXTURE_PATH "background.jpg"
-#define KEYMOVEPIXELS 6
+static unsigned int KEYMOVEPIXELS = 3;
 
 static Field* field = NULL;
 
-int l_addWallBlock( lua_State* luaState)
+
+// Wrapper to call from lua script to add a WallBlock
+int l_addWallBlock(lua_State* luaState)
 {
    path background = lua_tostring(luaState, -3);
    s32 x = lua_tonumber(luaState, -2);
    s32 y = lua_tonumber(luaState, -1);
    field->addWallBlock(background, x, y);
    return 1;
+}
+
+// Wrapper to call from lua script. Sets a Character's position
+int l_setCharacterPosition(lua_State* luaState)
+{
+    s32 x = lua_tonumber(luaState, -2);
+    s32 y = lua_tonumber(luaState, -1);
+    field->setCharacterPosition(x, y);
+    return 1;
 }
 
 Field::Field(IVideoDriver* driver)
@@ -62,13 +73,17 @@ Field & Field::createField(irr::video::IVideoDriver *driver)
 
 void Field::init()
 {
-
+    // Generating walls in lua script
     lua_State *luaState = luaL_newstate();
     if (!luaState)
         return;
     luaL_openlibs(luaState);
 
+    // Pushing addWallBlock function to lua (so, now it is available in the script)
+    // to generate level's walls.
     lua_register(luaState, "addWallBlock" , l_addWallBlock);
+    // The same thing is for setCharacterPosition.
+    lua_register(luaState, "setCharacterPosition" , l_setCharacterPosition);
 
     if(luaL_dofile(luaState,"./generate_field.lua"))
     {
@@ -76,6 +91,24 @@ void Field::init()
        qDebug() << err;
        return;
     }
+    lua_close(luaState);
+
+    // getting some config values from config lua script
+    luaState = luaL_newstate();
+    if (!luaState)
+        return;
+    luaL_openlibs(luaState);
+
+    if(luaL_dofile(luaState,"./config.lua"))
+    {
+       const char* err = lua_tostring(luaState, -1);
+       qDebug() << err;
+       return;
+    }
+    lua_getglobal(luaState, "keyMovePixels");
+    KEYMOVEPIXELS = lua_tounsigned(luaState, -1);
+
+    lua_close(luaState);
 }
 
 void Field::deleteField()
@@ -121,13 +154,17 @@ void Field::newEvent(const SEvent &event)
             case EMIE_LMOUSE_PRESSED_DOWN:
                 {
                     {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 3);
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 2);
                         mCharacter->addAnimator(animator);
                     }
                     break;
                 }
-                default:
-                    break;
+            case EMIE_RMOUSE_PRESSED_DOWN:
+                {
+                    mCharacter->newEvent(event);
+                }
+            default:
+                break;
             }
             break;
         }
@@ -137,30 +174,42 @@ void Field::newEvent(const SEvent &event)
             {
             case KEY_LEFT:
                 {
-                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                      mCharacter->position() + vector2d<s32>(-KEYMOVEPIXELS,0), 3);
-                    mCharacter->addAnimator(animator);
+                    if (event.KeyInput.PressedDown)
+                    {
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                      mCharacter->position() + vector2d<s32>(-KEYMOVEPIXELS,0), 2);
+                        mCharacter->addAnimator(animator);
+                    }
                     break;
                 }
             case KEY_RIGHT:
                 {
-                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                          mCharacter->position() + vector2d<s32>(KEYMOVEPIXELS,0), 3);
-                    mCharacter->addAnimator(animator);
+                    if (event.KeyInput.PressedDown)
+                    {
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                          mCharacter->position() + vector2d<s32>(KEYMOVEPIXELS,0), 2);
+                        mCharacter->addAnimator(animator);
+                    }
                     break;
                 }
             case KEY_UP:
                 {
-                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                          mCharacter->position() + vector2d<s32>(0, -KEYMOVEPIXELS), 3);
-                    mCharacter->addAnimator(animator);
+                    if (event.KeyInput.PressedDown)
+                    {
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                          mCharacter->position() + vector2d<s32>(0, -KEYMOVEPIXELS), 2);
+                        mCharacter->addAnimator(animator);
+                    }
                     break;
                 }
             case KEY_DOWN:
                 {
-                    MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                          mCharacter->position() + vector2d<s32>(0, KEYMOVEPIXELS), 3);
-                    mCharacter->addAnimator(animator);
+                    if (event.KeyInput.PressedDown)
+                    {
+                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
+                                                                          mCharacter->position() + vector2d<s32>(0, KEYMOVEPIXELS), 2);
+                        mCharacter->addAnimator(animator);
+                    }
                     break;
                 }
             default:
@@ -184,6 +233,14 @@ void Field::setBackground(const path& backgroundPath)
     mBackgroundTexturePath = backgroundPath;
     if (mDriver)
         mTexture = mDriver->getTexture(BACKGROUND_TEXTURE_PATH);
+}
+
+void Field::setCharacterPosition(const irr::s32 &xCoord, const irr::s32 &yCoord)
+{
+    if (mCharacter)
+    {
+        mCharacter->setPosition(vector2d<s32>(xCoord, yCoord));
+    }
 }
 
 void Field::addWallBlock(const irr::io::path &blocksBackground, const irr::s32 &xCoord,

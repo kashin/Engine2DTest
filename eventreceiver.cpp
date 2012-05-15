@@ -109,14 +109,14 @@ bool EventReceiver::OnEvent(const SEvent &event)
         {
             switch(event.MouseInput.Event)
             {
-                case EMIE_LMOUSE_PRESSED_DOWN:
+                case EMIE_MOUSE_MOVED:
+                    break;
+                default:
                 {
                     if (mContext.field)
                         mContext.field->newEvent(event);
                     return true;
                 }
-                default:
-                    break;
             }
             break;
         }

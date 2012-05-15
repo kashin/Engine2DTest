@@ -32,7 +32,9 @@ void GraphicBlock::setTextureName(const path &textureName)
         mTexture = 0;
     }
     if (mDriver)
+    {
         mTexture = mDriver->getTexture(mTextureName);
+    }
 }
 
 void GraphicBlock::setPosition(vector2d<s32> position)

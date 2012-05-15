@@ -34,6 +34,9 @@ public:
 
     void setBackground(const irr::io::path& backgroundPath);
 
+    void setCharacterPosition(const irr::s32& xCoord,
+                              const irr::s32& yCoord);
+
     void addWallBlock(const irr::io::path& blocksBackground, const irr::s32& xCoord,
                       const irr::s32& yCoord);
     bool isCollided(const irr::core::rect<irr::s32>& objRect) const ;
@@ -42,7 +45,7 @@ protected:
     irr::video::IVideoDriver* mDriver;
 
 private:
-    Field(irr::video::IVideoDriver* driver);
+    explicit Field(irr::video::IVideoDriver* driver);
     void init();
 
 private:

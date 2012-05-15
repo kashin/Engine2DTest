@@ -13,10 +13,12 @@ namespace irr {
         class ITexture;
         class IVideoDriver;
     }
+    class SEvent;
 }
 
 class Animator2D;
 
+//! This class representing a character(for example a tank) on the field.
 class Character: public GraphicBlock
 {
 public:
@@ -27,8 +29,16 @@ public:
 
     virtual void draw();
 
+    //! Handles new events like Mouse/Key clicked, moved, etc.
+    void newEvent(const irr::SEvent& event);
+
+private:
+    void showMenu();
+    void closeMenu();
+
 private:
     irr::core::list<Animator2D*> mAnimations;
+    bool mShowMenu;
 };
 
 #endif // CHARACTER_H
