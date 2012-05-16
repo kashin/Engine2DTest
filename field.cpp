@@ -1,6 +1,5 @@
 #include "field.h"
 #include "character.h"
-#include "movetoanimator2d.h"
 #include "wallblock.h"
 
 #include <QDebug>
@@ -8,9 +7,9 @@
 
 extern "C"
 {
- #include <lua5.2/lua.h>
- #include <lua5.2/lualib.h>
- #include <lua5.2/lauxlib.h>
+#include <lua5.2/lua.h>
+#include <lua5.2/lualib.h>
+#include <lua5.2/lauxlib.h>
 }
 
 using namespace irr;
@@ -22,7 +21,6 @@ using namespace io;
 
 #define CHARACTER_TEXTURE_PATH "t90.jpg"
 #define BACKGROUND_TEXTURE_PATH "background.jpg"
-static unsigned int KEYMOVEPIXELS = 3;
 
 static Field* field = NULL;
 
@@ -30,11 +28,11 @@ static Field* field = NULL;
 // Wrapper to call from lua script to add a WallBlock
 int l_addWallBlock(lua_State* luaState)
 {
-   path background = lua_tostring(luaState, -3);
-   s32 x = lua_tonumber(luaState, -2);
-   s32 y = lua_tonumber(luaState, -1);
-   Field::instance().addWallBlock(background, x, y);
-   return 1;
+    path background = lua_tostring(luaState, -3);
+    s32 x = lua_tonumber(luaState, -2);
+    s32 y = lua_tonumber(luaState, -1);
+    Field::instance().addWallBlock(background, x, y);
+    return 1;
 }
 
 // Wrapper to call from lua script. Sets a Character's position
@@ -87,27 +85,10 @@ void Field::init()
 
     if(luaL_dofile(luaState,"./generate_field.lua"))
     {
-       const char* err = lua_tostring(luaState, -1);
-       qDebug() << err;
-       return;
-    }
-    lua_close(luaState);
-
-    // getting some config values from config lua script
-    luaState = luaL_newstate();
-    if (!luaState)
+        const char* err = lua_tostring(luaState, -1);
+        qDebug() << err;
         return;
-    luaL_openlibs(luaState);
-
-    if(luaL_dofile(luaState,"./config.lua"))
-    {
-       const char* err = lua_tostring(luaState, -1);
-       qDebug() << err;
-       return;
     }
-    lua_getglobal(luaState, "keyMovePixels");
-    KEYMOVEPIXELS = lua_tounsigned(luaState, -1);
-
     lua_close(luaState);
 }
 
@@ -145,80 +126,12 @@ void Field::newEvent(const SEvent &event)
 {
     if (mCharacter)
     {
-        switch(event.EventType)
+        // Remove this if statement if there is no other events received by
+        // Field in the future.
+        if (event.EventType == EET_MOUSE_INPUT_EVENT ||
+                event.EventType == EET_KEY_INPUT_EVENT)
         {
-        case EET_MOUSE_INPUT_EVENT:
-        {
-            switch(event.MouseInput.Event)
-            {
-            case EMIE_LMOUSE_PRESSED_DOWN:
-                {
-                    {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 2);
-                        mCharacter->addAnimator(animator);
-                    }
-                    break;
-                }
-            case EMIE_RMOUSE_PRESSED_DOWN:
-                {
-                    mCharacter->newEvent(event);
-                }
-            default:
-                break;
-            }
-            break;
-        }
-        case EET_KEY_INPUT_EVENT:
-        {
-            switch(event.KeyInput.Key)
-            {
-            case KEY_LEFT:
-                {
-                    if (event.KeyInput.PressedDown)
-                    {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                      mCharacter->position() + vector2d<s32>(-KEYMOVEPIXELS,0), 2);
-                        mCharacter->addAnimator(animator);
-                    }
-                    break;
-                }
-            case KEY_RIGHT:
-                {
-                    if (event.KeyInput.PressedDown)
-                    {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                          mCharacter->position() + vector2d<s32>(KEYMOVEPIXELS,0), 2);
-                        mCharacter->addAnimator(animator);
-                    }
-                    break;
-                }
-            case KEY_UP:
-                {
-                    if (event.KeyInput.PressedDown)
-                    {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                          mCharacter->position() + vector2d<s32>(0, -KEYMOVEPIXELS), 2);
-                        mCharacter->addAnimator(animator);
-                    }
-                    break;
-                }
-            case KEY_DOWN:
-                {
-                    if (event.KeyInput.PressedDown)
-                    {
-                        MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, mCharacter->position(),
-                                                                          mCharacter->position() + vector2d<s32>(0, KEYMOVEPIXELS), 2);
-                        mCharacter->addAnimator(animator);
-                    }
-                    break;
-                }
-            default:
-                break;
-            }
-            break;
-        }
-        default:
-            break;
+            mCharacter->newEvent(event);
         }
     }
 }

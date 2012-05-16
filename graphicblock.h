@@ -12,6 +12,7 @@ namespace irr {
         class ITexture;
         class IVideoDriver;
     }
+    class SEvent;
 }
 
 class Animator2D;
@@ -41,6 +42,13 @@ public:
     virtual void draw();
     void drawAll();
 
+    void enableAnimations(bool val);
+
+    //! Handles new events like Mouse/Key clicked, moved, etc.
+    void newEvent(const irr::SEvent& event);
+    virtual void newKeyEvent(const irr::SEvent& event);
+    virtual void newMouseEvent(const irr::SEvent& event);
+
 protected:
     const irr::video::ITexture* texture() const { return mTexture; }
 
@@ -48,6 +56,7 @@ protected:
     irr::video::IVideoDriver* mDriver;
 
 private:
+    bool mEnableAnimation;
     irr::io::path mTextureName;
     irr::core::vector2d<irr::s32> mCurrentPosition;
     irr::video::ITexture* mTexture;

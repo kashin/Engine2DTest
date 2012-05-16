@@ -13,7 +13,6 @@ namespace irr {
         class ITexture;
         class IVideoDriver;
     }
-    class SEvent;
 }
 
 //! This class representing a character(for example a tank) on the field.
@@ -25,8 +24,8 @@ public:
 
     virtual void draw();
 
-    //! Handles new events like Mouse/Key clicked, moved, etc.
-    void newEvent(const irr::SEvent& event);
+    virtual void newKeyEvent(const irr::SEvent& event);
+    virtual void newMouseEvent(const irr::SEvent& event);
 
 private:
     void showMenu();

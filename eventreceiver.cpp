@@ -107,18 +107,9 @@ bool EventReceiver::OnEvent(const SEvent &event)
         }
     case EET_MOUSE_INPUT_EVENT:
         {
-            switch(event.MouseInput.Event)
-            {
-                case EMIE_MOUSE_MOVED:
-                    break;
-                default:
-                {
-                    if (mContext.field)
-                        mContext.field->newEvent(event);
-                    return true;
-                }
-            }
-            break;
+            if (mContext.field)
+                mContext.field->newEvent(event);
+            return true;
         }
     case EET_KEY_INPUT_EVENT:
         {

@@ -12,6 +12,7 @@ using namespace io;
 
 GraphicBlock::GraphicBlock(IVideoDriver *driver, const CollisionType& type)
     : mDriver(driver),
+      mEnableAnimation(true),
       mTexture(0),
       mCollisionType(type)
 {
@@ -68,7 +69,7 @@ void GraphicBlock::addAnimator(Animator2D *animator)
 
 void GraphicBlock::drawAll()
 {
-    if (!mAnimations.empty())
+    if (mEnableAnimation && !mAnimations.empty())
     {
         irr::core::list< Animator2D* >::Iterator it = mAnimations.begin();
         irr::core::list< Animator2D* >::Iterator end = mAnimations.end();
@@ -107,4 +108,36 @@ const irr::core::rect<irr::s32> GraphicBlock::getBoundRect() const
 {
     return rect<irr::s32>(mCurrentPosition - (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)),
                           mCurrentPosition + (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)));
+}
+
+
+void GraphicBlock::newEvent(const irr::SEvent &event)
+{
+    switch(event.EventType)
+    {
+    case EET_MOUSE_INPUT_EVENT:
+    {
+        newMouseEvent(event);
+        break;
+    }
+    case EET_KEY_INPUT_EVENT:
+    {
+        newKeyEvent(event);
+    }
+    default:
+        break;
+    }
+}
+
+void GraphicBlock::newKeyEvent(const irr::SEvent &/*event*/)
+{
+}
+
+void GraphicBlock::newMouseEvent(const irr::SEvent &/*event*/)
+{
+}
+
+void GraphicBlock::enableAnimations(bool val)
+{
+    mEnableAnimation = val;
 }
