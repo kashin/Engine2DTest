@@ -27,12 +27,18 @@ public:
     virtual void newKeyEvent(const irr::SEvent& event);
     virtual void newMouseEvent(const irr::SEvent& event);
 
+    irr::s32 actionsCount() const { return mMenuActionsCount; }
+
 private:
+    void drawMenu();
+    void drawMenuAction(const irr::core::vector2d<irr::s32>& pos);
     void showMenu();
     void closeMenu();
 
 private:
     bool mShowMenu;
+    irr::s32 mMenuActionsCount;
+    irr::video::ITexture* mMenuCircleTexture;
 };
 
 #endif // CHARACTER_H

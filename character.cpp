@@ -22,7 +22,9 @@ static unsigned int KEYMOVEPIXELS = 3;
 
 Character::Character(IVideoDriver *driver, const CollisionType& type)
     : GraphicBlock(driver, type),
-      mShowMenu(false)
+      mShowMenu(false),
+      mMenuActionsCount(0),
+      mMenuCircleTexture(0)
 {
 
     // getting some config values from config lua script
@@ -39,26 +41,64 @@ Character::Character(IVideoDriver *driver, const CollisionType& type)
     }
     lua_getglobal(luaState, "keyMovePixels");
     KEYMOVEPIXELS = lua_tounsigned(luaState, -1);
+    lua_getglobal(luaState, "characterActionsCount");
+    mMenuActionsCount = lua_tonumber(luaState, -1);
 
     lua_close(luaState);
 }
 
 Character::~Character()
 {
+    if (mMenuCircleTexture)
+    {
+        delete mMenuCircleTexture;
+        mMenuCircleTexture = 0;
+    }
 }
 
 void Character::draw()
 {
-    if (mShowMenu)
-    {
-        mDriver->draw2DPolygon(position(), max_<s32>(texture()->getSize().Width, texture()->getSize().Height),
-                               SColor(255, 120, 255, 255), 30);
-        return;
-    }
     if (mDriver && texture())
     {
         mDriver->draw2DImage(texture(), position() - (vector2d<s32>(texture()->getSize().Width/2, texture()->getSize().Height/2)));
     }
+    if (mShowMenu)
+    {
+        drawMenu();
+    }
+}
+
+void Character::drawMenu()
+{
+    s32 radius = max_<s32>(texture()->getSize().Width, texture()->getSize().Height);
+
+    mDriver->draw2DPolygon(position(), radius,
+                           SColor(255, 125, 80, 255), mMenuActionsCount);
+    if (mMenuCircleTexture == 0)
+    {
+        mMenuCircleTexture  = mDriver->getTexture("MenuCircle.png");
+    }
+    vector2d<s32> vertex;
+
+    for (s32 i=0; i < mMenuActionsCount; ++i)
+    {
+        f32 p = i / (f32)mMenuActionsCount * (core::PI*2);
+        vertex = position() +
+                position2d<s32>( (s32)(sin(p)*radius),
+                                 (s32)(cos(p)*radius) );
+        drawMenuAction(vertex);
+    }
+}
+
+void Character::drawMenuAction(const vector2d<s32> &pos)
+{
+    // FIXME: replace rect by vector2d.
+    // I have no idea atm why draw2DImage with destPosition as a second argument is not working properly here,
+    // so that's where that ugly hack came from :)
+    s32 width = mMenuCircleTexture->getSize().Width;
+    s32 height = mMenuCircleTexture->getSize().Height;
+    mDriver->draw2DImage(mMenuCircleTexture, rect<s32>(pos.X - width/2, pos.Y - height/2, pos.X + width/2, pos.Y + height/2),
+                         rect<s32>(0,0,width,height), 0, 0, true);
 }
 
 void Character::showMenu()
