@@ -3,23 +3,13 @@
 
 #include "graphicblock.h"
 
-#include <irrlicht/vector2d.h>
-#include <irrlicht/path.h>
-#include <irrlicht/irrTypes.h>
-#include <irrlicht/irrList.h>
-
-namespace irr {
-    namespace video {
-        class ITexture;
-        class IVideoDriver;
-    }
-}
+class ActionGraphicItem;
 
 //! This class representing a character(for example a tank) on the field.
 class Character: public GraphicBlock
 {
 public:
-    Character(irr::video::IVideoDriver* driver, const CollisionType& type = CanCollideType);
+    explicit Character(irr::video::IVideoDriver* driver, const CollisionType& type = CanCollideType);
     ~Character();
 
     virtual void draw();
@@ -31,14 +21,15 @@ public:
 
 private:
     void drawMenu();
-    void drawMenuAction(const irr::core::vector2d<irr::s32>& pos);
+    void addMenuAction(const irr::core::vector2d<irr::s32>& pos);
+    void clearMenuActions();
     void showMenu();
     void closeMenu();
 
 private:
     bool mShowMenu;
-    irr::s32 mMenuActionsCount;
-    irr::video::ITexture* mMenuCircleTexture;
+    irr::u32 mMenuActionsCount;
+    irr::core::list<ActionGraphicItem*> mActionItems;
 };
 
 #endif // CHARACTER_H

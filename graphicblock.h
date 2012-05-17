@@ -25,7 +25,7 @@ public:
         CanNotCollideType
     };
 
-    GraphicBlock(irr::video::IVideoDriver* driver, const CollisionType& type = CanNotCollideType);
+    explicit GraphicBlock(irr::video::IVideoDriver* driver, const CollisionType& type = CanNotCollideType);
     ~GraphicBlock();
 
     const CollisionType& collisionType() const { return mCollisionType; }

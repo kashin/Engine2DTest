@@ -1,5 +1,6 @@
 #include "character.h"
 #include "movetoanimator2d.h"
+#include "actiongraphicitem.h"
 
 #include <irrlicht/irrlicht.h>
 #include <QDebug>
@@ -19,12 +20,12 @@ using namespace video;
 using namespace io;
 
 static unsigned int KEYMOVEPIXELS = 3;
+#define ACTIONTEXTURENAME "MenuCircle.png"
 
 Character::Character(IVideoDriver *driver, const CollisionType& type)
     : GraphicBlock(driver, type),
       mShowMenu(false),
-      mMenuActionsCount(0),
-      mMenuCircleTexture(0)
+      mMenuActionsCount(0)
 {
 
     // getting some config values from config lua script
@@ -49,11 +50,7 @@ Character::Character(IVideoDriver *driver, const CollisionType& type)
 
 Character::~Character()
 {
-    if (mMenuCircleTexture)
-    {
-        delete mMenuCircleTexture;
-        mMenuCircleTexture = 0;
-    }
+    mActionItems.clear();
 }
 
 void Character::draw()
@@ -74,31 +71,36 @@ void Character::drawMenu()
 
     mDriver->draw2DPolygon(position(), radius,
                            SColor(255, 125, 80, 255), mMenuActionsCount);
-    if (mMenuCircleTexture == 0)
+    if (mMenuActionsCount != mActionItems.size())
     {
-        mMenuCircleTexture  = mDriver->getTexture("MenuCircle.png");
-    }
-    vector2d<s32> vertex;
+        //we are recreating all menu items, so let's remove the old one
+        clearMenuActions();
+        vector2d<s32> vertex;
 
-    for (s32 i=0; i < mMenuActionsCount; ++i)
+        for (u32 i=0; i < mMenuActionsCount; ++i)
+        {
+            f32 p = i / (f32)mMenuActionsCount * (core::PI*2);
+            vertex = position() +
+                    position2d<s32>( (s32)(sin(p)*radius),
+                                     (s32)(cos(p)*radius) );
+            addMenuAction(vertex);
+        }
+    }
+    irr::core::list< ActionGraphicItem* >::Iterator it = mActionItems.begin();
+    irr::core::list< ActionGraphicItem* >::Iterator end = mActionItems.end();
+    while (it != end)
     {
-        f32 p = i / (f32)mMenuActionsCount * (core::PI*2);
-        vertex = position() +
-                position2d<s32>( (s32)(sin(p)*radius),
-                                 (s32)(cos(p)*radius) );
-        drawMenuAction(vertex);
+        (*it)->draw();
+        ++it;
     }
 }
 
-void Character::drawMenuAction(const vector2d<s32> &pos)
+void Character::addMenuAction(const vector2d<s32> &pos)
 {
-    // FIXME: replace rect by vector2d.
-    // I have no idea atm why draw2DImage with destPosition as a second argument is not working properly here,
-    // so that's where that ugly hack came from :)
-    s32 width = mMenuCircleTexture->getSize().Width;
-    s32 height = mMenuCircleTexture->getSize().Height;
-    mDriver->draw2DImage(mMenuCircleTexture, rect<s32>(pos.X - width/2, pos.Y - height/2, pos.X + width/2, pos.Y + height/2),
-                         rect<s32>(0,0,width,height), 0, 0, true);
+    ActionGraphicItem* item = new ActionGraphicItem(mDriver);
+    item->setTextureName(ACTIONTEXTURENAME);
+    item->setPosition(pos);
+    mActionItems.push_front(item);
 }
 
 void Character::showMenu()
@@ -165,6 +167,7 @@ void Character::newKeyEvent(const irr::SEvent &event)
     }
     case KEY_SPACE:
     {
+        clearMenuActions();
         closeMenu();
     }
     default:
@@ -197,5 +200,20 @@ void Character::newMouseEvent(const irr::SEvent &event)
     }
     default:
         break;
+    }
+    irr::core::list< ActionGraphicItem* >::Iterator it = mActionItems.begin();
+    irr::core::list< ActionGraphicItem* >::Iterator end = mActionItems.end();
+    while (it != end)
+    {
+        (*it)->newEvent(event);
+        ++it;
+    }
+}
+
+void Character::clearMenuActions()
+{
+    if (!mActionItems.empty())
+    {
+        mActionItems.clear();
     }
 }
