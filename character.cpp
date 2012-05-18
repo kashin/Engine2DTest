@@ -195,6 +195,7 @@ void Character::newMouseEvent(const irr::SEvent &event)
         }
         else if (mShowMenu)
         {
+            clearMenuActions();
             closeMenu();
         }
     }
