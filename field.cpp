@@ -100,8 +100,6 @@ void Field::deleteField()
 
 Field::~Field()
 {
-    if (mTexture)
-        delete mTexture;
     if (mCharacter)
         delete mCharacter;
 }
@@ -140,12 +138,17 @@ void Field::setBackground(const path& backgroundPath)
 {
     if (mTexture)
     {
-        delete mTexture;
         mTexture = 0;
     }
     mBackgroundTexturePath = backgroundPath;
     if (mDriver)
-        mTexture = mDriver->getTexture(BACKGROUND_TEXTURE_PATH);
+    {
+        mTexture = mDriver->findTexture(BACKGROUND_TEXTURE_PATH);
+        if (!mTexture)
+        {
+            mTexture = mDriver->getTexture(BACKGROUND_TEXTURE_PATH);
+        }
+    }
 }
 
 void Field::setCharacterPosition(const irr::s32 &xCoord, const irr::s32 &yCoord)

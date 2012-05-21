@@ -21,11 +21,15 @@ using namespace io;
 
 static unsigned int KEYMOVEPIXELS = 3;
 #define ACTIONTEXTURENAME "MenuCircle.png"
+#define SPRITE_TEXTURE_PATH "tank_sprite.jpg"
+#define CHARACTER_TEXTURE_PATH "t90.jpg"
 
 Character::Character(IVideoDriver *driver, const CollisionType& type)
     : GraphicBlock(driver, type),
       mShowMenu(false),
-      mMenuActionsCount(0)
+      mMenuActionsCount(0),
+      mAnimationFPS(1),
+      mCurrentAnimationFrame(0)
 {
 
     // getting some config values from config lua script
@@ -57,7 +61,27 @@ void Character::draw()
 {
     if (mDriver && texture())
     {
-        mDriver->draw2DImage(texture(), position() - (vector2d<s32>(texture()->getSize().Width/2, texture()->getSize().Height/2)));
+        if (mAnimationFPS == 1)
+        {
+            mDriver->draw2DImage(texture(), position() - (vector2d<s32>(texture()->getSize().Width/2, texture()->getSize().Height/2)));
+        }
+        else
+        {
+            if (mCurrentAnimationFrame == mAnimationFPS)
+            {
+                mCurrentAnimationFrame = 0;
+            }
+//            ITexture* texture = texture();
+//            s32 width = texture->getSize().Width;
+//            s32 height = texture->getSize().Height;
+
+            s32 xPos = 64 * mCurrentAnimationFrame;
+            s32 yPos = 64 * mCurrentAnimationFrame;
+            rect<s32> destRect(position() - vector2d<s32>(32,32), position() + vector2d<s32>(32,32));
+            mDriver->draw2DImage(texture(), destRect,
+                                 rect<s32>(xPos, yPos, xPos + 64, yPos + 64));
+            ++mCurrentAnimationFrame;
+        }
     }
     if (mShowMenu)
     {
@@ -67,7 +91,17 @@ void Character::draw()
 
 void Character::drawMenu()
 {
-    s32 radius = max_<s32>(texture()->getSize().Width, texture()->getSize().Height);
+    s32 radius;
+    if (mAnimationFPS == 1)
+    {
+        radius = max_<s32>(texture()->getSize().Width, texture()->getSize().Height);
+    }
+    else
+    {
+        // FIXME: THIS IS A STUPID HARDCODED TEST
+        radius = max_<s32>(texture()->getSize().Width / 3,
+                           texture()->getSize().Height / 3);
+    }
 
     mDriver->draw2DPolygon(position(), radius,
                            SColor(255, 125, 80, 255), mMenuActionsCount);
@@ -109,6 +143,8 @@ void Character::showMenu()
     {
         mShowMenu = true;
         enableAnimations(false);
+        setTextureName(SPRITE_TEXTURE_PATH);
+        setFPS(9);
     }
 }
 
@@ -119,6 +155,8 @@ void Character::closeMenu()
         clearMenuActions();
         mShowMenu = false;
         enableAnimations(true);
+        mCurrentAnimationFrame = 0;
+        setTextureName(CHARACTER_TEXTURE_PATH);
     }
 }
 
@@ -216,5 +254,14 @@ void Character::clearMenuActions()
     if (!mActionItems.empty())
     {
         mActionItems.clear();
+    }
+}
+
+void Character::setFPS(const unsigned int fps)
+{
+    if (fps > 0)
+    {
+        mAnimationFPS = fps;
+        mCurrentAnimationFrame = 0;
     }
 }

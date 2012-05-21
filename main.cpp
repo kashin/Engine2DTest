@@ -49,8 +49,8 @@ int main()
     device->setWindowCaption(L"Irrlicht Engine Test");
 
     video::IVideoDriver* driver = device->getVideoDriver();
-    //        scene::ISceneManager* scene = device->getSceneManager(); // we are always can show any 3D mesh with 2D graphic
-    //        IGUIEnvironment* env = device->getGUIEnvironment();
+//    scene::ISceneManager* scene = device->getSceneManager(); // we are always can show any 3D mesh with 2D graphic
+//    IGUIEnvironment* env = device->getGUIEnvironment();
 
     // Store the appropriate data in a context structure.
 

@@ -11,18 +11,17 @@ using namespace video;
 using namespace io;
 
 GraphicBlock::GraphicBlock(IVideoDriver *driver, const CollisionType& type)
-    : mDriver(driver),
+    : mDriver(0),
       mEnableAnimation(true),
       mTexture(0),
       mCollisionType(type)
 {
+    mDriver = driver;
     setPosition(vector2d<s32>(0,0));
 }
 
 GraphicBlock::~GraphicBlock()
 {
-    if (mTexture)
-        delete mTexture;
     irr::core::list< Animator2D* >::ConstIterator it = mAnimations.begin();
     irr::core::list< Animator2D* >::ConstIterator end = mAnimations.end();
     while (it != end)
@@ -37,12 +36,15 @@ void GraphicBlock::setTextureName(const path &textureName)
     mTextureName = textureName;
     if (mTexture)
     {
-        delete mTexture;
         mTexture = 0;
     }
     if (mDriver)
     {
-        mTexture = mDriver->getTexture(mTextureName);
+        mTexture = mDriver->findTexture(mTextureName);
+        if (!mTexture)
+        {
+            mTexture = mDriver->getTexture(mTextureName);
+        }
     }
 }
 
