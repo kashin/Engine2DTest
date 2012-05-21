@@ -38,7 +38,7 @@ void ActionGraphicItem::draw()
     // so that's where that ugly hack came from :)
     s32 width = texture()->getSize().Width;
     s32 height = texture()->getSize().Height;
-    SColor* color = (mHighlighted ? (new SColor(200,255,255,255) ) : 0 ) ;
+    SColor* color = mHighlighted ? (new SColor(200,255,255,255) ) : 0 ;
     mDriver->draw2DImage(texture(),
                          rect<s32>(position().X - width/2, position().Y - height/2, position().X + width/2, position().Y + height/2),
                          rect<s32>(0,0,width,height), 0, color, true);

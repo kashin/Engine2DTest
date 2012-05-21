@@ -1,5 +1,6 @@
-1) Impl for character's animation.
-2) Highlighted character.
-3) Different actions into each menu item.
-4) New animations for walls (and explosions).
-5) Layers??? List that contains an elements for a different "levels" of the scene.
+1) Impl character's animation.
+2) Use 3D model as a character.
+3) Highlighted character.
+4) Different actions into each menu item.
+5) New animations for walls (and explosions).
+6) Layers??? List that contains an elements for a different "levels" of the scene.

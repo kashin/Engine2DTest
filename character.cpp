@@ -116,6 +116,7 @@ void Character::closeMenu()
 {
     if (mShowMenu)
     {
+        clearMenuActions();
         mShowMenu = false;
         enableAnimations(true);
     }
@@ -167,7 +168,6 @@ void Character::newKeyEvent(const irr::SEvent &event)
     }
     case KEY_SPACE:
     {
-        clearMenuActions();
         closeMenu();
     }
     default:
@@ -181,6 +181,7 @@ void Character::newMouseEvent(const irr::SEvent &event)
     {
     case EMIE_LMOUSE_PRESSED_DOWN:
     {
+        if (!mShowMenu)
         {
             MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 2);
             addAnimator(animator);
@@ -195,7 +196,6 @@ void Character::newMouseEvent(const irr::SEvent &event)
         }
         else if (mShowMenu)
         {
-            clearMenuActions();
             closeMenu();
         }
     }
@@ -206,7 +206,7 @@ void Character::newMouseEvent(const irr::SEvent &event)
     irr::core::list< ActionGraphicItem* >::Iterator end = mActionItems.end();
     while (it != end)
     {
-        (*it)->newEvent(event);
+        (*it)->newMouseEvent(event);
         ++it;
     }
 }
