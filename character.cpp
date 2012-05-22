@@ -1,5 +1,6 @@
 #include "character.h"
 #include "movetoanimator2d.h"
+#include "bullet.h"
 #include "actiongraphicitem.h"
 
 #include <irrlicht/irrlicht.h>
@@ -30,7 +31,8 @@ Character::Character(IVideoDriver *driver, const CollisionType& type)
       mShowMenu(false),
       mMenuActionsCount(0),
       mAnimationFPS(1),
-      mCurrentAnimationFrame(0)
+      mCurrentAnimationFrame(0),
+      mIsControlPressed(false)
 {
 
     // getting some config values from config lua script
@@ -87,6 +89,28 @@ void Character::draw()
             }
         }
     }
+    irr::core::list< GraphicBlock* >::Iterator it = mBullets.begin();
+    irr::core::list< GraphicBlock* >::Iterator end = mBullets.end();
+    irr::core::list< irr::core::list< GraphicBlock* >::Iterator> deleteBulletsList;
+    while (it != end)
+    {
+        if ((*it)->animationsFinished())
+        {
+            deleteBulletsList.push_front(it);
+            ++it;
+            continue;
+        }
+        (*it)->drawAll();
+        ++it;
+    }
+    irr::core::list< irr::core::list< GraphicBlock* >::Iterator>::Iterator iter = deleteBulletsList.begin();
+    while (iter != deleteBulletsList.end())
+    {
+        delete *(*iter);
+        mBullets.erase((*iter));
+        ++iter;
+    }
+
     if (mShowMenu)
     {
         drawMenu();
@@ -202,6 +226,12 @@ void Character::newKeyEvent(const irr::SEvent &event)
     case KEY_SPACE:
     {
         closeMenu();
+        break;
+    }
+    case KEY_LCONTROL:
+    {
+        mIsControlPressed = event.KeyInput.PressedDown;
+        break;
     }
     default:
         break;
@@ -216,8 +246,19 @@ void Character::newMouseEvent(const irr::SEvent &event)
     {
         if (!mShowMenu)
         {
-            MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 2);
-            addAnimator(animator);
+            if (mIsControlPressed)
+            {
+                vector2d<s32> start = getBoundRect().getCenter() + vector2d<s32>(getBoundRect().getWidth(), 0);
+                Bullet* bullet = new Bullet(mDriver, start,
+                                            vector2d<s32>(event.MouseInput.X, event.MouseInput.Y),
+                                            1, CanCollideType);
+                mBullets.push_front(bullet);
+            }
+            else
+            {
+                MoveToAnimator2D* animator = new MoveToAnimator2D(Animator2D::MoveToAnimation, position(), vector2d<s32>(event.MouseInput.X, event.MouseInput.Y), 2);
+                addAnimator(animator);
+            }
         }
         break;
     }

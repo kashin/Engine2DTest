@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     movetoanimator2d.cpp \
     wallblock.cpp \
     graphicblock.cpp \
-    actiongraphicitem.cpp
+    actiongraphicitem.cpp \
+    bullet.cpp
 
 HEADERS += \
     eventreceiver.h \
@@ -21,7 +22,8 @@ HEADERS += \
     movetoanimator2d.h \
     wallblock.h \
     graphicblock.h \
-    actiongraphicitem.h
+    actiongraphicitem.h \
+    bullet.h
 
 OTHER_FILES += \
     config.lua \

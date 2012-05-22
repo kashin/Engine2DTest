@@ -38,7 +38,11 @@ public:
 
     virtual const irr::core::rect<irr::s32> getBoundRect() const;
 
-    virtual void addAnimator(Animator2D* animator);
+    /** Adds new animator or replaces any previous animator
+        with the same animation type.
+      */
+    void addAnimator(Animator2D* animator);
+
     virtual void draw();
     void drawAll();
 
@@ -48,6 +52,8 @@ public:
     void newEvent(const irr::SEvent& event);
     virtual void newKeyEvent(const irr::SEvent& event);
     virtual void newMouseEvent(const irr::SEvent& event);
+
+    bool animationsFinished();
 
 protected:
     const irr::video::ITexture* texture() const { return mTexture; }

@@ -157,3 +157,8 @@ void GraphicBlock::setTextureSize(irr::u32 width, irr::u32 height)
     mWidth = width;
     mHeight = height;
 }
+
+bool GraphicBlock::animationsFinished()
+{
+    return mAnimations.empty();
+}

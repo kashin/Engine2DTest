@@ -10,6 +10,7 @@ public:
     enum AnimationType {
         MoveToAnimation = 0,
         FireToAnimation,
+        BulletAnimation,
         ExplosionAnimation
     };
 

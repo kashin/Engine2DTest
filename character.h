@@ -42,6 +42,8 @@ private:
     unsigned int mAnimationFPS; //! if  mAnimationFPS = 1 than it means a static picture
     unsigned int mCurrentAnimationFrame;
     irr::core::list<irr::core::rect<irr::s32> > mSpriteFrameRectangles;
+    irr::core::list<GraphicBlock*> mBullets;
+    bool mIsControlPressed;
 };
 
 #endif // CHARACTER_H

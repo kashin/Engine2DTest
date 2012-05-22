@@ -14,7 +14,7 @@ public:
                               irr::s32 animationSpeed);
     ~MoveToAnimator2D();
 
-    virtual void runAnimation(GraphicBlock* character);
+    virtual void runAnimation(GraphicBlock* graphicBlock);
 
     virtual bool animationFinished();
 
