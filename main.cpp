@@ -67,7 +67,18 @@ int main()
     // And tell the device to use our custom event receiver.
     device->setEventReceiver(&receiver);
 
+    u32 previousTime = device->getTimer()->getRealTime();
     while(device->run() && driver)
+    {
+        u32 currentTime = device->getTimer()->getRealTime();
+
+        if (currentTime - previousTime < 17)
+        {
+            continue;
+        }
+
+        previousTime = currentTime;
+
         if (device->isWindowActive())
         {
             driver->beginScene(true, true, SColor(0,200,200,200));
@@ -76,6 +87,7 @@ int main()
 
             driver->endScene();
         }
+    }
 
     context.field = 0;
     Field::deleteField();

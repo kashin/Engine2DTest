@@ -52,6 +52,9 @@ public:
 protected:
     const irr::video::ITexture* texture() const { return mTexture; }
 
+    //! This will have effect on a bounded rect size, sprite animation, etc.
+    void setTextureSize(irr::u32 width, irr::u32 height);
+
 protected:
     irr::video::IVideoDriver* mDriver;
 
@@ -62,6 +65,8 @@ private:
     irr::video::ITexture* mTexture;
     irr::core::list<Animator2D*> mAnimations;
     CollisionType mCollisionType;
+    irr::u32 mWidth;
+    irr::u32 mHeight;
 };
 
 #endif // GRAPHICBLOCK_H

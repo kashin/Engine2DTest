@@ -12,8 +12,6 @@ MoveToAnimator2D::MoveToAnimator2D(Animator2D::AnimationType type,
                                    irr::s32 animationSpeed)
     : Animator2D(type),
       mFinished(false),
-      mSkipFrames(SKIP_FRAMES),
-      mAnimationSpeed(animationSpeed),
       mEndPostion(moveToPosition)
 {
     // FIXME:  Argh, how to make appropriate speed vector???
@@ -34,15 +32,7 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
         mFinished = true;
         return;
     }
-    if (mSkipFrames > 0)
-    {
-        --mSkipFrames;
-        return;
-    }
-    else
-    {
-        mSkipFrames = SKIP_FRAMES;
-    }
+
     irr::core::vector2d<irr::s32> nextPosition = currentPosition + mSpeedVector;
     if ((mSpeedVector.X != 0) && (((currentPosition.X + mSpeedVector.X >= mEndPostion.X ) &&
          (currentPosition.X < mEndPostion.X)) ||

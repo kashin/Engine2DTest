@@ -14,7 +14,9 @@ GraphicBlock::GraphicBlock(IVideoDriver *driver, const CollisionType& type)
     : mDriver(0),
       mEnableAnimation(true),
       mTexture(0),
-      mCollisionType(type)
+      mCollisionType(type),
+      mWidth(0),
+      mHeight(0)
 {
     mDriver = driver;
     setPosition(vector2d<s32>(0,0));
@@ -44,6 +46,11 @@ void GraphicBlock::setTextureName(const path &textureName)
         if (!mTexture)
         {
             mTexture = mDriver->getTexture(mTextureName);
+        }
+        if (mTexture)
+        {
+            mWidth = mTexture->getSize().Width;
+            mHeight = mTexture->getSize().Height;
         }
     }
 }
@@ -102,14 +109,15 @@ void GraphicBlock::draw()
 {
     if (mTexture && mDriver)
     {
-        mDriver->draw2DImage(mTexture, mCurrentPosition - (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)));
+        mDriver->draw2DImage(mTexture, mCurrentPosition - (vector2d<s32>(mWidth/2, mHeight/2)));
     }
 }
 
 const irr::core::rect<irr::s32> GraphicBlock::getBoundRect() const
 {
-    return rect<irr::s32>(mCurrentPosition - (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)),
-                          mCurrentPosition + (vector2d<s32>(mTexture->getSize().Width/2, mTexture->getSize().Height/2)));
+    vector2d<s32> vect(mWidth/2, mHeight/2);
+    return rect<irr::s32>(mCurrentPosition - vect,
+                          mCurrentPosition + vect);
 }
 
 
@@ -142,4 +150,10 @@ void GraphicBlock::newMouseEvent(const irr::SEvent &/*event*/)
 void GraphicBlock::enableAnimations(bool val)
 {
     mEnableAnimation = val;
+}
+
+void GraphicBlock::setTextureSize(irr::u32 width, irr::u32 height)
+{
+    mWidth = width;
+    mHeight = height;
 }

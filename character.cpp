@@ -26,6 +26,7 @@ static unsigned int KEYMOVEPIXELS = 3;
 
 Character::Character(IVideoDriver *driver, const CollisionType& type)
     : GraphicBlock(driver, type),
+      mLuaState(0),
       mShowMenu(false),
       mMenuActionsCount(0),
       mAnimationFPS(1),
@@ -33,27 +34,29 @@ Character::Character(IVideoDriver *driver, const CollisionType& type)
 {
 
     // getting some config values from config lua script
-    lua_State* luaState = luaL_newstate();
-    if (!luaState)
+    lua_State* mLuaState = luaL_newstate();
+    if (!mLuaState)
         return;
-    luaL_openlibs(luaState);
+    luaL_openlibs(mLuaState);
 
-    if(luaL_dofile(luaState,"./config.lua"))
+    if(luaL_dofile(mLuaState,"./config.lua"))
     {
-        const char* err = lua_tostring(luaState, -1);
+        const char* err = lua_tostring(mLuaState, -1);
         qDebug() << err;
         return;
     }
-    lua_getglobal(luaState, "keyMovePixels");
-    KEYMOVEPIXELS = lua_tounsigned(luaState, -1);
-    lua_getglobal(luaState, "characterActionsCount");
-    mMenuActionsCount = lua_tonumber(luaState, -1);
-
-    lua_close(luaState);
+    lua_getglobal(mLuaState, "keyMovePixels");
+    KEYMOVEPIXELS = lua_tounsigned(mLuaState, -1);
+    lua_getglobal(mLuaState, "characterActionsCount");
+    mMenuActionsCount = lua_tonumber(mLuaState, -1);
 }
 
 Character::~Character()
 {
+    if (mLuaState)
+    {
+        lua_close(mLuaState);
+    }
     mActionItems.clear();
 }
 
@@ -71,16 +74,17 @@ void Character::draw()
             {
                 mCurrentAnimationFrame = 0;
             }
-//            ITexture* texture = texture();
-//            s32 width = texture->getSize().Width;
-//            s32 height = texture->getSize().Height;
-
-            s32 xPos = 64 * mCurrentAnimationFrame;
-            s32 yPos = 64 * mCurrentAnimationFrame;
-            rect<s32> destRect(position() - vector2d<s32>(32,32), position() + vector2d<s32>(32,32));
-            mDriver->draw2DImage(texture(), destRect,
-                                 rect<s32>(xPos, yPos, xPos + 64, yPos + 64));
-            ++mCurrentAnimationFrame;
+            if (mSpriteFrameRectangles.getSize() > mCurrentAnimationFrame)
+            {
+                irr::core::list< irr::core::rect<irr::s32> >::ConstIterator iter = mSpriteFrameRectangles.begin();
+                iter += mCurrentAnimationFrame;
+                mDriver->draw2DImage(texture(), getBoundRect(), *iter, 0, 0, true);
+                ++mCurrentAnimationFrame;
+            }
+            else
+            {
+                mCurrentAnimationFrame = 0;
+            }
         }
     }
     if (mShowMenu)
@@ -92,19 +96,11 @@ void Character::draw()
 void Character::drawMenu()
 {
     s32 radius;
-    if (mAnimationFPS == 1)
-    {
-        radius = max_<s32>(texture()->getSize().Width, texture()->getSize().Height);
-    }
-    else
-    {
-        // FIXME: THIS IS A STUPID HARDCODED TEST
-        radius = max_<s32>(texture()->getSize().Width / 3,
-                           texture()->getSize().Height / 3);
-    }
+    radius = max_<s32>(getBoundRect().getWidth(), getBoundRect().getHeight());
 
     mDriver->draw2DPolygon(position(), radius,
                            SColor(255, 125, 80, 255), mMenuActionsCount);
+
     if (mMenuActionsCount != mActionItems.size())
     {
         //we are recreating all menu items, so let's remove the old one
@@ -143,8 +139,7 @@ void Character::showMenu()
     {
         mShowMenu = true;
         enableAnimations(false);
-        setTextureName(SPRITE_TEXTURE_PATH);
-        setFPS(9);
+        setSpriteAnimation(SPRITE_TEXTURE_PATH, 64, 64);
     }
 }
 
@@ -155,7 +150,7 @@ void Character::closeMenu()
         clearMenuActions();
         mShowMenu = false;
         enableAnimations(true);
-        mCurrentAnimationFrame = 0;
+        setFPS(1);
         setTextureName(CHARACTER_TEXTURE_PATH);
     }
 }
@@ -263,5 +258,25 @@ void Character::setFPS(const unsigned int fps)
     {
         mAnimationFPS = fps;
         mCurrentAnimationFrame = 0;
+    }
+}
+
+void Character::setSpriteAnimation(irr::io::path texturePath, irr::u32 frameWidth, irr::u32 frameHeight)
+{
+    mCurrentAnimationFrame = 0;
+    mSpriteFrameRectangles.clear();
+    setTextureName(texturePath);
+    u32 textureWidth = texture()->getSize().Width;
+    u32 textureHeight = texture()->getSize().Height;
+    setTextureSize(frameWidth, frameHeight);
+
+    mAnimationFPS = (textureWidth / frameWidth) * (textureHeight / frameHeight);
+
+    for (u32 i = 0; i < textureHeight; i+= frameHeight)
+    {
+        for (u32 j = 0; j < textureWidth; j+= frameWidth)
+        {
+            mSpriteFrameRectangles.push_front(rect<s32>(j, i, j + frameWidth, i + frameHeight));
+        }
     }
 }

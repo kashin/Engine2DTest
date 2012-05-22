@@ -20,8 +20,6 @@ public:
 
 private:
     bool mFinished;
-    irr::s32 mSkipFrames; // FIXME: remove this stupid hack as soon as right algorithm is done for Speed Vector.
-    irr::s32 mAnimationSpeed; // FIXME: remove this stupid hack as soon as right algorithm is done for Speed Vector.
     irr::core::vector2d<irr::s32> mSpeedVector;
     irr::core::vector2d<irr::s32> mEndPostion;
 };
