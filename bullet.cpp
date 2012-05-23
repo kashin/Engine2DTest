@@ -1,5 +1,5 @@
 #include "bullet.h"
-#include "movetoanimator2d.h"
+#include "explosionanimation2d.h"
 
 #include "irrlicht/irrlicht.h"
 
@@ -22,16 +22,15 @@ Bullet::Bullet(irr::video::IVideoDriver *driver,
     setPosition(startPoint);
     setTextureName(BULLET_TEXTURE_PATH);
 
-    MoveToAnimator2D* anim = new MoveToAnimator2D(Animator2D::FireToAnimation,
+    ExplosionAnimation2D* anim = new ExplosionAnimation2D(Animator2D::FireToAnimation,
                                               position(), moveTo, speed);
     addAnimator(anim);
 }
 
 void Bullet::draw()
 {
-    GraphicBlock::draw();
-    if (animationsFinished())
+    if (texture() && mDriver && !animationsFinished(Animator2D::FireToAnimation) )
     {
-        // TODO: add explosion animation here :)
+        mDriver->draw2DImage(texture(), position());
     }
 }

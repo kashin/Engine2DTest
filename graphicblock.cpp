@@ -72,6 +72,7 @@ void GraphicBlock::addAnimator(Animator2D *animator)
             mAnimations.erase(it);
             break;
         }
+        ++it;
     }
     mAnimations.push_front(animator);
 }
@@ -158,7 +159,22 @@ void GraphicBlock::setTextureSize(irr::u32 width, irr::u32 height)
     mHeight = height;
 }
 
-bool GraphicBlock::animationsFinished()
+bool GraphicBlock::animationsFinished(Animator2D::AnimationType type)
 {
-    return mAnimations.empty();
+    if (type == Animator2D::AllAnimations)
+    {
+        return mAnimations.empty();
+    }
+
+    irr::core::list< Animator2D* >::Iterator it = mAnimations.begin();
+    irr::core::list< Animator2D* >::Iterator end = mAnimations.end();
+    while (it != end)
+    {
+        if ((*it)->type() == type && !(*it)->animationFinished())
+        {
+            return false;
+        }
+        ++it;
+    }
+    return true;
 }

@@ -18,6 +18,10 @@ public:
 
     virtual bool animationFinished();
 
+protected:
+    virtual void finishAnimation(GraphicBlock *graphicBlock = 0, bool collided = false);
+    void setFinished(bool val);
+
 private:
     bool mFinished;
     irr::core::vector2d<irr::s32> mSpeedVector;

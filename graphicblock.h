@@ -1,6 +1,8 @@
 #ifndef GRAPHICBLOCK_H
 #define GRAPHICBLOCK_H
 
+#include "animator2d.h"
+
 #include <irrlicht/vector2d.h>
 #include <irrlicht/path.h>
 #include <irrlicht/irrTypes.h>
@@ -14,8 +16,6 @@ namespace irr {
     }
     class SEvent;
 }
-
-class Animator2D;
 
 class GraphicBlock
 {
@@ -40,6 +40,8 @@ public:
 
     /** Adds new animator or replaces any previous animator
         with the same animation type.
+        After this call GraphicBlock will free the Animator's memory when it is needed,
+        so no need to free this memory manually.
       */
     void addAnimator(Animator2D* animator);
 
@@ -53,7 +55,9 @@ public:
     virtual void newKeyEvent(const irr::SEvent& event);
     virtual void newMouseEvent(const irr::SEvent& event);
 
-    bool animationsFinished();
+    bool animationsFinished(Animator2D::AnimationType type = Animator2D::AllAnimations);
+
+    irr::video::IVideoDriver* driver() { return mDriver; }
 
 protected:
     const irr::video::ITexture* texture() const { return mTexture; }

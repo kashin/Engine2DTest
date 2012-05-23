@@ -11,15 +11,18 @@ public:
         MoveToAnimation = 0,
         FireToAnimation,
         BulletAnimation,
-        ExplosionAnimation
+        ExplosionAnimation,
+
+        // add new Animation types above this line
+        AllAnimations
     };
 
     explicit Animator2D(AnimationType type);
-    virtual bool animationFinished() = 0;
 
     AnimationType type() const { return mType; }
 
-    virtual void runAnimation(GraphicBlock* character) = 0;
+    virtual void runAnimation(GraphicBlock* graphicBlock) = 0;
+    virtual bool animationFinished() = 0;
 
 private:
     AnimationType mType;

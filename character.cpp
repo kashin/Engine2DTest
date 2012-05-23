@@ -34,9 +34,8 @@ Character::Character(IVideoDriver *driver, const CollisionType& type)
       mCurrentAnimationFrame(0),
       mIsControlPressed(false)
 {
-
     // getting some config values from config lua script
-    lua_State* mLuaState = luaL_newstate();
+    mLuaState = luaL_newstate();
     if (!mLuaState)
         return;
     luaL_openlibs(mLuaState);

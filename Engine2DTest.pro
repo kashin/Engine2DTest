@@ -12,7 +12,10 @@ SOURCES += main.cpp \
     wallblock.cpp \
     graphicblock.cpp \
     actiongraphicitem.cpp \
-    bullet.cpp
+    bullet.cpp \
+    explosionanimation2d.cpp \
+    basesprite.cpp \
+    explosionspriteanimator2d.cpp
 
 HEADERS += \
     eventreceiver.h \
@@ -23,7 +26,10 @@ HEADERS += \
     wallblock.h \
     graphicblock.h \
     actiongraphicitem.h \
-    bullet.h
+    bullet.h \
+    explosionanimation2d.h \
+    basesprite.h \
+    explosionspriteanimator2d.h
 
 OTHER_FILES += \
     config.lua \

@@ -29,7 +29,7 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
     irr::core::vector2d<irr::s32> currentPosition = graphicBlock->position();
     if (currentPosition.equals(mEndPostion))
     {
-        mFinished = true;
+        finishAnimation(graphicBlock);
         return;
     }
 
@@ -58,11 +58,21 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
     }
     else
     {
-        mFinished = true;
+        finishAnimation(graphicBlock, true);
     }
 }
 
 bool MoveToAnimator2D::animationFinished()
 {
     return mFinished;
+}
+
+void MoveToAnimator2D::finishAnimation(GraphicBlock */*graphicBlock*/, bool /*collided*/)
+{
+    mFinished = true;
+}
+
+void MoveToAnimator2D::setFinished(bool val)
+{
+    mFinished = val;
 }

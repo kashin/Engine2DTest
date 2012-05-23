@@ -11,7 +11,6 @@ public:
                     irr::core::vector2d<irr::s32> moveTo,
                     irr::s32 speed,
                     const CollisionType& type = CanCollideType);
-
     virtual void draw();
 };
 
