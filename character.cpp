@@ -163,6 +163,14 @@ void Character::showMenu()
         mShowMenu = true;
         enableAnimations(false);
         setSpriteAnimation(SPRITE_TEXTURE_PATH, 64, 64);
+
+        irr::core::list< GraphicBlock* >::Iterator it = mBullets.begin();
+        irr::core::list< GraphicBlock* >::Iterator end = mBullets.end();
+        while (it != end)
+        {
+            (*it)->enableAnimations(false);
+            ++it;
+        }
     }
 }
 
@@ -175,6 +183,14 @@ void Character::closeMenu()
         enableAnimations(true);
         setFPS(1);
         setTextureName(CHARACTER_TEXTURE_PATH);
+
+        irr::core::list< GraphicBlock* >::Iterator it = mBullets.begin();
+        irr::core::list< GraphicBlock* >::Iterator end = mBullets.end();
+        while (it != end)
+        {
+            (*it)->enableAnimations(true);
+            ++it;
+        }
     }
 }
 
