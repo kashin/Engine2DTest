@@ -167,7 +167,7 @@ void Field::addWallBlock(const irr::io::path &blocksBackground, const irr::s32 &
     mWallBlocks.push_front(wallBlock);
 }
 
-bool Field::isCollided(const irr::core::rect<irr::s32>& objRect) const
+bool Field::isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const
 {
     if (!mWallBlocks.empty())
     {

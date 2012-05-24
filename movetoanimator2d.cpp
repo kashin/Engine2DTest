@@ -52,7 +52,7 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
         mSpeedVector.Y = 0;
     }
 
-    if (!Field::instance().isCollided(graphicBlock->getBoundRect() + mSpeedVector))
+    if (!Field::instance().isCollidedWithWall(graphicBlock->getBoundRect() + mSpeedVector))
     {
         graphicBlock->setPosition(nextPosition);
     }
