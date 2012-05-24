@@ -13,7 +13,7 @@ ExplosionAnimation2D::ExplosionAnimation2D(Animator2D::AnimationType type,
 
 void ExplosionAnimation2D::finishAnimation(GraphicBlock *graphicBlock, bool collided)
 {
-    if (collided)
+    if (collided && graphicBlock)
     {
         ExplosionSpriteAnimator2D* anim = new ExplosionSpriteAnimator2D(graphicBlock->position(), graphicBlock->driver());
         graphicBlock->addAnimator(anim);

@@ -102,15 +102,26 @@ Field::~Field()
 {
     if (mCharacter)
         delete mCharacter;
+    if (!mGraphicBlocks.empty())
+    {
+        irr::core::list< GraphicBlock* >::Iterator it = mGraphicBlocks.begin();
+        irr::core::list< GraphicBlock* >::Iterator end = mGraphicBlocks.end();
+        while (it != end)
+        {
+            delete (*it);
+            ++it;
+        }
+        mGraphicBlocks.clear();
+    }
 }
 
 void Field::draw()
 {
     mDriver->draw2DImage(mTexture, position2d<s32>(0,0));
-    if (!mWallBlocks.empty())
+    if (!mGraphicBlocks.empty())
     {
-        irr::core::list< WallBlock* >::Iterator it = mWallBlocks.begin();
-        irr::core::list< WallBlock* >::Iterator end = mWallBlocks.end();
+        irr::core::list< GraphicBlock* >::Iterator it = mGraphicBlocks.begin();
+        irr::core::list< GraphicBlock* >::Iterator end = mGraphicBlocks.end();
         while (it != end)
         {
             (*it)->drawAll();
@@ -164,15 +175,15 @@ void Field::addWallBlock(const irr::io::path &blocksBackground, const irr::s32 &
 {
     WallBlock* wallBlock = new WallBlock(mDriver, vector2d<s32>(xCoord, yCoord));
     wallBlock->setTextureName(blocksBackground);
-    mWallBlocks.push_front(wallBlock);
+    mGraphicBlocks.push_front(wallBlock);
 }
 
 bool Field::isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const
 {
-    if (!mWallBlocks.empty())
+    if (!mGraphicBlocks.empty())
     {
-        irr::core::list< WallBlock* >::ConstIterator it = mWallBlocks.begin();
-        irr::core::list< WallBlock* >::ConstIterator end = mWallBlocks.end();
+        irr::core::list< GraphicBlock* >::ConstIterator it = mGraphicBlocks.begin();
+        irr::core::list< GraphicBlock* >::ConstIterator end = mGraphicBlocks.end();
         while (it != end)
         {
             if ((*it)->collisionType() == GraphicBlock::CanCollideType && objRect.isRectCollided((*it)->getBoundRect()))
@@ -181,4 +192,25 @@ bool Field::isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const
         }
     }
     return false;
+}
+
+const GraphicBlock* Field::isCollided(const irr::core::rect<irr::s32> &checkRect) const
+{
+    if (!mGraphicBlocks.empty())
+    {
+        irr::core::list< GraphicBlock* >::ConstIterator it = mGraphicBlocks.begin();
+        irr::core::list< GraphicBlock* >::ConstIterator end = mGraphicBlocks.end();
+        while (it != end)
+        {
+            if ((*it)->collisionType() == GraphicBlock::CanCollideType && checkRect.isRectCollided((*it)->getBoundRect()))
+                return (*it);
+            ++it;
+        }
+    }
+    if (mCharacter && mCharacter->collisionType() == GraphicBlock::CanCollideType &&
+            checkRect.isRectCollided(mCharacter->getBoundRect()))
+    {
+        return mCharacter;
+    }
+    return 0;
 }

@@ -14,8 +14,7 @@ namespace video {
     class SEvent;
 }
 
-class Character;
-class WallBlock;
+class GraphicBlock;
 
 //! This is a game field class.
 /** This class handles some events and moves it to appropriate objects (like characters).
@@ -39,7 +38,9 @@ public:
 
     void addWallBlock(const irr::io::path& blocksBackground, const irr::s32& xCoord,
                       const irr::s32& yCoord);
-    bool isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const ;
+    bool isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const;
+
+    const GraphicBlock* isCollided(const irr::core::rect<irr::s32>& checkRect) const;
 
 protected:
     irr::video::IVideoDriver* mDriver;
@@ -49,10 +50,10 @@ private:
     void init();
 
 private:
-    Character* mCharacter;
+    GraphicBlock* mCharacter;
     irr::io::path mBackgroundTexturePath;
     irr::video::ITexture* mTexture;
-    irr::core::list<WallBlock*> mWallBlocks;
+    irr::core::list<GraphicBlock*> mGraphicBlocks;
 };
 
 #endif // FIELD_H

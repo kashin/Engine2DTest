@@ -1,6 +1,7 @@
 7) Collision detection.
    Should all related stuff be moved into one place?
-   Otherwhise I have a double/triple/etc. checking...
+   Otherwhise I have a double/triple/etc. checking if there are more than one GraphicBlock in motion...
+8) Move Character to mGraphicBlocks list.
 5) New animations for walls.
 1) Improve character's animation.
 3) Highlighted character.

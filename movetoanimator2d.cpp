@@ -26,6 +26,13 @@ MoveToAnimator2D::~MoveToAnimator2D()
 
 void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
 {
+    if (!graphicBlock)
+    {
+        // OUCH, grpahicBlock is 0, so let's finish this animation.
+        qDebug() << Q_FUNC_INFO << "graphicBlock is 0!";
+        finishAnimation(graphicBlock);
+        return;
+    }
     irr::core::vector2d<irr::s32> currentPosition = graphicBlock->position();
     if (currentPosition.equals(mEndPostion))
     {
@@ -52,7 +59,8 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
         mSpeedVector.Y = 0;
     }
 
-    if (!Field::instance().isCollidedWithWall(graphicBlock->getBoundRect() + mSpeedVector))
+    const GraphicBlock* block = Field::instance().isCollided(graphicBlock->getBoundRect() + mSpeedVector);
+    if (block == 0 || block == graphicBlock)
     {
         graphicBlock->setPosition(nextPosition);
     }
