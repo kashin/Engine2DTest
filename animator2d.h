@@ -18,6 +18,7 @@ public:
     };
 
     explicit Animator2D(AnimationType type);
+    virtual ~Animator2D();
 
     AnimationType type() const { return mType; }
 

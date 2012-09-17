@@ -26,7 +26,7 @@ public:
     static Field & instance();
     static Field & createField(irr::video::IVideoDriver* driver);
     static void deleteField();
-    ~Field();
+    virtual ~Field();
 
     void newEvent(const irr::SEvent& event);
     virtual void draw();
