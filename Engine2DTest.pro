@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     bullet.cpp \
     explosionanimation2d.cpp \
     basesprite.cpp \
-    explosionspriteanimator2d.cpp
+    explosionspriteanimator2d.cpp \
+    fieldnetblock.cpp
 
 HEADERS += \
     eventreceiver.h \
@@ -29,7 +30,8 @@ HEADERS += \
     bullet.h \
     explosionanimation2d.h \
     basesprite.h \
-    explosionspriteanimator2d.h
+    explosionspriteanimator2d.h \
+    fieldnetblock.h
 
 OTHER_FILES += \
     config.lua \

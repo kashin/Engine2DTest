@@ -48,12 +48,15 @@ protected:
 private:
     explicit Field(irr::video::IVideoDriver* driver);
     void init();
+    void addFieldNet();
 
 private:
+    irr::core::dimension2d<irr::u32> mBlockSizes;
     GraphicBlock* mCharacter;
     irr::io::path mBackgroundTexturePath;
     irr::video::ITexture* mTexture;
     irr::core::list<GraphicBlock*> mGraphicBlocks;
+    irr::core::list<GraphicBlock*> mFieldsNetGraphicBlocks;
 };
 
 #endif // FIELD_H

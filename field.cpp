@@ -1,6 +1,7 @@
 #include "field.h"
 #include "character.h"
 #include "wallblock.h"
+#include "fieldnetblock.h"
 
 #include <QDebug>
 #include <irrlicht/irrlicht.h>
@@ -90,6 +91,49 @@ void Field::init()
         return;
     }
     lua_close(luaState);
+    luaState = 0;
+
+    // Reading some config values here
+    luaState = luaL_newstate();
+    if (!luaState)
+        return;
+    if(luaL_dofile(luaState,"./config.lua"))
+    {
+       const char* err = lua_tostring(luaState, -1);
+       printf("%s\n", err);
+       return;
+    }
+    lua_getglobal(luaState, "blockWidth");
+    mBlockSizes.Width = (u32)lua_tonumber(luaState, -1);
+    lua_getglobal(luaState, "blockHeight");
+    mBlockSizes.Height = (u32)lua_tonumber(luaState, -1);
+    lua_close(luaState);
+
+    addFieldNet();
+}
+
+void Field::addFieldNet()
+{
+    if (mBlockSizes.Width == 0 && mBlockSizes.Height == 0)
+    {
+        qDebug() << "Ups, looks like some nasty is in mBlockSizes: " << mBlockSizes.Width << mBlockSizes.Height;
+        return;
+    }
+    u32 horizontalPosition = mBlockSizes.Width / 2;
+    for (u32 i = 0; i < mDriver->getScreenSize().Width / mBlockSizes.Width + 1;
+         i++ , horizontalPosition += mBlockSizes.Width)
+    {
+        u32 verticalPosition = mBlockSizes.Height / 2;
+        for (u32 j = 0; j < mDriver->getScreenSize().Height / mBlockSizes.Height + 1;
+             j++ , verticalPosition += mBlockSizes.Height)
+        {
+            FieldNetBlock* netBlock =
+                    new FieldNetBlock(vector2d<s32>(horizontalPosition, verticalPosition), SColor(0xFF, 0x00, 0xFF, 0x00),
+                                      mDriver);
+            netBlock->setBlockSizes(mBlockSizes);
+            mFieldsNetGraphicBlocks.push_front(netBlock);
+        }
+    }
 }
 
 void Field::deleteField()
@@ -113,11 +157,35 @@ Field::~Field()
         }
         mGraphicBlocks.clear();
     }
+    if (!mFieldsNetGraphicBlocks.empty())
+    {
+        irr::core::list< GraphicBlock* >::Iterator it = mFieldsNetGraphicBlocks.begin();
+        irr::core::list< GraphicBlock* >::Iterator end = mFieldsNetGraphicBlocks.end();
+        while (it != end)
+        {
+            delete (*it);
+            ++it;
+        }
+        mFieldsNetGraphicBlocks.clear();
+    }
 }
 
 void Field::draw()
 {
+    //Background
     mDriver->draw2DImage(mTexture, position2d<s32>(0,0));
+    //Field's net
+    if (!mFieldsNetGraphicBlocks.empty())
+    {
+        irr::core::list< GraphicBlock* >::Iterator it = mFieldsNetGraphicBlocks.begin();
+        irr::core::list< GraphicBlock* >::Iterator end = mFieldsNetGraphicBlocks.end();
+        while (it != end)
+        {
+            (*it)->drawAll();
+            ++it;
+        }
+    }
+    //All Graphic blocks (walls, etc.)
     if (!mGraphicBlocks.empty())
     {
         irr::core::list< GraphicBlock* >::Iterator it = mGraphicBlocks.begin();
@@ -128,6 +196,7 @@ void Field::draw()
             ++it;
         }
     }
+    // Character
     mCharacter->drawAll();
 }
 
@@ -186,7 +255,8 @@ bool Field::isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const
         irr::core::list< GraphicBlock* >::ConstIterator end = mGraphicBlocks.end();
         while (it != end)
         {
-            if ((*it)->collisionType() == GraphicBlock::CanCollideType && objRect.isRectCollided((*it)->getBoundRect()))
+            if ((*it)->collisionType() == GraphicBlock::CanCollideType &&
+                objRect.isRectCollided((*it)->getBoundRect()))
                 return true;
             ++it;
         }
@@ -202,13 +272,14 @@ const GraphicBlock* Field::isCollided(const irr::core::rect<irr::s32> &checkRect
         irr::core::list< GraphicBlock* >::ConstIterator end = mGraphicBlocks.end();
         while (it != end)
         {
-            if ((*it)->collisionType() == GraphicBlock::CanCollideType && checkRect.isRectCollided((*it)->getBoundRect()))
+            if ((*it)->collisionType() == GraphicBlock::CanCollideType &&
+                checkRect.isRectCollided((*it)->getBoundRect()))
                 return (*it);
             ++it;
         }
     }
     if (mCharacter && mCharacter->collisionType() == GraphicBlock::CanCollideType &&
-            checkRect.isRectCollided(mCharacter->getBoundRect()))
+        checkRect.isRectCollided(mCharacter->getBoundRect()))
     {
         return mCharacter;
     }

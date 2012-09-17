@@ -1,3 +1,5 @@
+9) Add Field's net and replace 'by pixel' movement with 'net' movement.
+10) If any wall or character are placed out of the "net brick" border, then it should be moved appropriately.
 7) Collision detection.
    Should all related stuff be moved into one place?
    Otherwhise I have a double/triple/etc. checking if there are more than one GraphicBlock in motion...

@@ -1,7 +1,7 @@
 windowWidth = 1024
 windowHeight = 768
-blockWidth = 10
-blockHeight = 10
+blockWidth = 64
+blockHeight = 64
 keyMovePixels = 4
 characterActionsCount = 8
 explosionFrameWidth = 20
