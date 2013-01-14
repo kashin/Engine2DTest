@@ -1,6 +1,6 @@
 #include "graphicblock.h"
 #include "animator2d.h"
-#include <irrlicht/irrlicht.h>
+#include <irrlicht.h>
 #include <QDebug>
 
 using namespace irr;

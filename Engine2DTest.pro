@@ -1,7 +1,9 @@
 QT -= gui
 CONFIG += link_pkgconfig
 
-LIBS += -lIrrlicht -llua5.2
+LIBS += -L./ -lIrrlicht -llua52
+INCLUDEPATH += ../irrlicht-1.7.3/include
+INCLUDEPATH += ./include
 
 SOURCES += main.cpp \
     eventreceiver.cpp \

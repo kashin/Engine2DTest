@@ -1,7 +1,7 @@
 #include "bullet.h"
 #include "explosionanimation2d.h"
 
-#include "irrlicht/irrlicht.h"
+#include "irrlicht.h"
 
 #define BULLET_TEXTURE_PATH "bullet.png"
 

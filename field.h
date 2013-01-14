@@ -1,10 +1,10 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include <irrlicht/path.h>
-#include <irrlicht/irrTypes.h>
-#include <irrlicht/irrList.h>
-#include <irrlicht/rect.h>
+#include <path.h>
+#include <irrTypes.h>
+#include <irrList.h>
+#include <rect.h>
 
 namespace irr {
 namespace video {

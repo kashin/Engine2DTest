@@ -1,5 +1,5 @@
 #include "fieldnetblock.h"
-#include <irrlicht/irrlicht.h>
+#include <irrlicht.h>
 
 FieldNetBlock::FieldNetBlock(irr::core::vector2d<irr::s32> position, const irr::video::SColor color,
                              irr::video::IVideoDriver *driver, const CollisionType &type)

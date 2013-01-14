@@ -1,6 +1,6 @@
 #include "eventreceiver.h"
 #include "field.h"
-#include <irrlicht/irrlicht.h>
+#include <irrlicht.h>
 
 using namespace irr;
 

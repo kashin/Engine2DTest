@@ -2,7 +2,7 @@
 #define EXPLOSIONSPRITE_H
 
 #include "animator2d.h"
-#include <irrlicht/vector2d.h>
+#include <vector2d.h>
 
 class BaseSprite;
 
