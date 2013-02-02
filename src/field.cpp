@@ -20,8 +20,8 @@ using namespace scene;
 using namespace video;
 using namespace io;
 
-#define CHARACTER_TEXTURE_PATH "t90.jpg"
-#define BACKGROUND_TEXTURE_PATH "background.jpg"
+#define CHARACTER_TEXTURE_PATH "data/t90.jpg"
+#define BACKGROUND_TEXTURE_PATH "data/background.jpg"
 
 static Field* field = NULL;
 
@@ -84,7 +84,7 @@ void Field::init()
     // The same thing is for setCharacterPosition.
     lua_register(luaState, "setCharacterPosition" , l_setCharacterPosition);
 
-    if(luaL_dofile(luaState,"./generate_field.lua"))
+    if(luaL_dofile(luaState,"./data/generate_field.lua"))
     {
         const char* err = lua_tostring(luaState, -1);
         qDebug() << err;
@@ -97,7 +97,7 @@ void Field::init()
     luaState = luaL_newstate();
     if (!luaState)
         return;
-    if(luaL_dofile(luaState,"./config.lua"))
+    if(luaL_dofile(luaState,"./data/config.lua"))
     {
        const char* err = lua_tostring(luaState, -1);
        printf("%s\n", err);

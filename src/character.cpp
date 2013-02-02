@@ -21,9 +21,9 @@ using namespace video;
 using namespace io;
 
 static unsigned int KEYMOVEPIXELS = 3;
-#define ACTIONTEXTURENAME "MenuCircle.png"
-#define SPRITE_TEXTURE_PATH "tank_sprite.jpg"
-#define CHARACTER_TEXTURE_PATH "t90.jpg"
+#define ACTIONTEXTURENAME "data/MenuCircle.png"
+#define SPRITE_TEXTURE_PATH "data/tank_sprite.jpg"
+#define CHARACTER_TEXTURE_PATH "data/t90.jpg"
 
 Character::Character(IVideoDriver *driver, const CollisionType& type)
     : GraphicBlock(driver, type),
@@ -40,7 +40,7 @@ Character::Character(IVideoDriver *driver, const CollisionType& type)
         return;
     luaL_openlibs(mLuaState);
 
-    if(luaL_dofile(mLuaState,"./config.lua"))
+    if(luaL_dofile(mLuaState,"./data/config.lua"))
     {
         const char* err = lua_tostring(mLuaState, -1);
         qDebug() << err;

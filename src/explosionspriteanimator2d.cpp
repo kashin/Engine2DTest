@@ -10,7 +10,7 @@ extern "C"
 #include <lua5.2/lauxlib.h>
 }
 
-#define EXPLOSION_TEXTURE_PATH "explosion_sprite.png"
+#define EXPLOSION_TEXTURE_PATH "data/explosion_sprite.png"
 
 ExplosionSpriteAnimator2D::ExplosionSpriteAnimator2D(irr::core::vector2d<irr::s32> position,
                                                      irr::video::IVideoDriver *driver)
@@ -25,7 +25,7 @@ ExplosionSpriteAnimator2D::ExplosionSpriteAnimator2D(irr::core::vector2d<irr::s3
         return;
     luaL_openlibs(luaState);
 
-    if(luaL_dofile(luaState,"./config.lua"))
+    if(luaL_dofile(luaState,"./data/config.lua"))
     {
         return;
     }

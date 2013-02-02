@@ -3,7 +3,7 @@
 
 #include "irrlicht/irrlicht.h"
 
-#define BULLET_TEXTURE_PATH "bullet.png"
+#define BULLET_TEXTURE_PATH "data/bullet.png"
 
 using namespace irr;
 

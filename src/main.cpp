@@ -26,7 +26,7 @@ int main()
         return 1;
     luaL_openlibs(luaState);
 
-    if(luaL_dofile(luaState,"./config.lua"))
+    if(luaL_dofile(luaState,"./data/config.lua"))
     {
        const char* err = lua_tostring(luaState, -1);
        printf("%s\n", err);
