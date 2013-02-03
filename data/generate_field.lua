@@ -12,7 +12,7 @@ endPosition = xPosition + 400;
 
 for i = xPosition, endPosition , 64
 do
-    addWallBlock("brickwall.jpg", i, yPosition);
+    addWallBlock("data/brickwall.jpg", i, yPosition);
     value = i;
 end
 
@@ -22,7 +22,7 @@ endPosition = yPosition + 400;
 
 for i = yPosition, endPosition, 64
 do
-    addWallBlock("brickwall.jpg", xPosition, i);
+    addWallBlock("data/brickwall.jpg", xPosition, i);
     value = i;
 end
 
@@ -32,7 +32,7 @@ endPosition = xPosition + 200;
 
 for i = xPosition, endPosition , 64
 do
-    addWallBlock("brickwall.jpg", i, yPosition);
+    addWallBlock("data/brickwall.jpg", i, yPosition);
     value = i;
 end
 
@@ -42,7 +42,7 @@ endPosition = yPosition - 500;
 
 for i = yPosition, endPosition, 64
 do
-    addWallBlock("brickwall.jpg", xPosition, i);
+    addWallBlock("data/brickwall.jpg", xPosition, i);
     value = i;
 end
 
