@@ -1,3 +1,4 @@
+6) This project needs a big refactorization. I need to create a good node's tree logic to be able to fix collision detections, etc.
 9) Add Field's net and replace 'by pixel' movement with 'net' movement.
 10) If any wall or character are placed out of the "net brick" border, then it should be moved appropriately.
 7) Collision detection.
@@ -5,8 +6,7 @@
    Otherwhise I have a double/triple/etc. checking if there are more than one GraphicBlock in motion...
 8) Move Character to mGraphicBlocks list.
 5) New animations for walls.
-1) Improve character's animation.
+11) Improve character's animation.
 3) Highlighted character.
 4) Different actions into each menu item.
 2) Use 3D model as a character.
-6) Layers??? List that contains an elements for a different "levels" of the scene.
