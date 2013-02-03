@@ -59,7 +59,7 @@ void MoveToAnimator2D::runAnimation(GraphicBlock *graphicBlock)
         mSpeedVector.Y = 0;
     }
 
-    const GraphicBlock* block = Field::instance().isCollided(graphicBlock->getBoundRect() + mSpeedVector);
+    const GraphicBlock* block = SceneManager::instance().isCollided(graphicBlock->getBoundRect() + mSpeedVector);
     if (block == 0 || block == graphicBlock)
     {
         graphicBlock->setPosition(nextPosition);

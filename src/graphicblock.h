@@ -2,6 +2,7 @@
 #define GRAPHICBLOCK_H
 
 #include "animator2d.h"
+#include "iscenenode.h"
 
 #include <irrlicht/vector2d.h>
 #include <irrlicht/path.h>
@@ -17,7 +18,7 @@ namespace irr {
     class SEvent;
 }
 
-class GraphicBlock
+class GraphicBlock: public ISceneNode
 {
 public:
     enum CollisionType {

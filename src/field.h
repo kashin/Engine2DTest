@@ -6,6 +6,8 @@
 #include <irrlicht/irrList.h>
 #include <irrlicht/rect.h>
 
+#include "iscenenode.h"
+
 namespace irr {
 namespace video {
     class ITexture;
@@ -15,20 +17,21 @@ namespace video {
 }
 
 class GraphicBlock;
+class Scene;
 
 //! This is a game field class.
 /** This class handles some events and moves it to appropriate objects (like characters).
     It is some kind of a Scene manager. It draws all objects on the Game Field
   */
-class Field
+class SceneManager: public ISceneNode
 {
 public:
-    static Field & instance();
-    static Field & createField(irr::video::IVideoDriver* driver);
+    static SceneManager & instance();
+    static SceneManager & createSceneManager(irr::video::IVideoDriver* driver);
     static void deleteField();
-    virtual ~Field();
+    virtual ~SceneManager();
 
-    void newEvent(const irr::SEvent& event);
+    virtual void handleEvent(const irr::SEvent& event);
     virtual void draw();
 
     void setBackground(const irr::io::path& backgroundPath);
@@ -42,15 +45,19 @@ public:
 
     const GraphicBlock* isCollided(const irr::core::rect<irr::s32>& checkRect) const;
 
+    // If mCurrentScene is not null, then previous scene will be deleted
+    void setCurrentScene(Scene* newScene);
+
 protected:
     irr::video::IVideoDriver* mDriver;
 
 private:
-    explicit Field(irr::video::IVideoDriver* driver);
+    explicit SceneManager(irr::video::IVideoDriver* driver);
     void init();
     void addFieldNet();
 
 private:
+    Scene* mCurrentScene;
     irr::core::dimension2d<irr::u32> mBlockSizes;
     GraphicBlock* mCharacter;
     irr::io::path mBackgroundTexturePath;

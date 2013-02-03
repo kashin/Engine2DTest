@@ -16,7 +16,9 @@ SOURCES += src/main.cpp \
     src/explosionanimation2d.cpp \
     src/basesprite.cpp \
     src/explosionspriteanimator2d.cpp \
-    src/fieldnetblock.cpp
+    src/fieldnetblock.cpp \
+    src/scene.cpp \
+    src/iscenenode.cpp
 
 HEADERS += \
     src/eventreceiver.h \
@@ -31,7 +33,9 @@ HEADERS += \
     src/explosionanimation2d.h \
     src/basesprite.h \
     src/explosionspriteanimator2d.h \
-    src/fieldnetblock.h
+    src/fieldnetblock.h \
+    src/scene.h \
+    src/iscenenode.h
 
 OTHER_FILES += \
     data/config.lua \

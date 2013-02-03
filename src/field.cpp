@@ -2,6 +2,7 @@
 #include "character.h"
 #include "wallblock.h"
 #include "fieldnetblock.h"
+#include "scene.h"
 
 #include <QDebug>
 #include <irrlicht/irrlicht.h>
@@ -23,7 +24,7 @@ using namespace io;
 #define CHARACTER_TEXTURE_PATH "data/t90.jpg"
 #define BACKGROUND_TEXTURE_PATH "data/background.jpg"
 
-static Field* field = NULL;
+static SceneManager* field = NULL;
 
 
 // Wrapper to call from lua script to add a WallBlock
@@ -32,7 +33,7 @@ int l_addWallBlock(lua_State* luaState)
     path background = lua_tostring(luaState, -3);
     s32 x = lua_tonumber(luaState, -2);
     s32 y = lua_tonumber(luaState, -1);
-    Field::instance().addWallBlock(background, x, y);
+    SceneManager::instance().addWallBlock(background, x, y);
     return 1;
 }
 
@@ -41,12 +42,13 @@ int l_setCharacterPosition(lua_State* luaState)
 {
     s32 x = lua_tonumber(luaState, -2);
     s32 y = lua_tonumber(luaState, -1);
-    Field::instance().setCharacterPosition(x, y);
+    SceneManager::instance().setCharacterPosition(x, y);
     return 1;
 }
 
-Field::Field(IVideoDriver* driver)
+SceneManager::SceneManager(IVideoDriver* driver)
     : mDriver(driver),
+      mCurrentScene(0),
       mTexture(0)
 {
     mCharacter = new Character(mDriver);
@@ -55,22 +57,22 @@ Field::Field(IVideoDriver* driver)
 }
 
 
-Field & Field::instance()
+SceneManager & SceneManager::instance()
 {
     return *field;
 }
 
-Field & Field::createField(irr::video::IVideoDriver *driver)
+SceneManager & SceneManager::createSceneManager(irr::video::IVideoDriver *driver)
 {
     if (!field)
     {
-        field = new Field(driver);
+        field = new SceneManager(driver);
         field->init();
     }
     return *field;
 }
 
-void Field::init()
+void SceneManager::init()
 {
     // Generating walls in lua script
     lua_State *luaState = luaL_newstate();
@@ -112,7 +114,7 @@ void Field::init()
     addFieldNet();
 }
 
-void Field::addFieldNet()
+void SceneManager::addFieldNet()
 {
     if (mBlockSizes.Width == 0 && mBlockSizes.Height == 0)
     {
@@ -136,13 +138,13 @@ void Field::addFieldNet()
     }
 }
 
-void Field::deleteField()
+void SceneManager::deleteField()
 {
     if (!field)
         delete field;
 }
 
-Field::~Field()
+SceneManager::~SceneManager()
 {
     if (mCharacter)
         delete mCharacter;
@@ -170,7 +172,7 @@ Field::~Field()
     }
 }
 
-void Field::draw()
+void SceneManager::draw()
 {
     //Background
     mDriver->draw2DImage(mTexture, position2d<s32>(0,0));
@@ -200,7 +202,7 @@ void Field::draw()
     mCharacter->drawAll();
 }
 
-void Field::newEvent(const SEvent &event)
+void SceneManager::handleEvent(const SEvent &event)
 {
     if (mCharacter)
     {
@@ -214,7 +216,7 @@ void Field::newEvent(const SEvent &event)
     }
 }
 
-void Field::setBackground(const path& backgroundPath)
+void SceneManager::setBackground(const path& backgroundPath)
 {
     if (mTexture)
     {
@@ -231,7 +233,7 @@ void Field::setBackground(const path& backgroundPath)
     }
 }
 
-void Field::setCharacterPosition(const irr::s32 &xCoord, const irr::s32 &yCoord)
+void SceneManager::setCharacterPosition(const irr::s32 &xCoord, const irr::s32 &yCoord)
 {
     if (mCharacter)
     {
@@ -239,7 +241,7 @@ void Field::setCharacterPosition(const irr::s32 &xCoord, const irr::s32 &yCoord)
     }
 }
 
-void Field::addWallBlock(const irr::io::path &blocksBackground, const irr::s32 &xCoord,
+void SceneManager::addWallBlock(const irr::io::path &blocksBackground, const irr::s32 &xCoord,
                          const irr::s32 &yCoord)
 {
     WallBlock* wallBlock = new WallBlock(mDriver, vector2d<s32>(xCoord, yCoord));
@@ -247,7 +249,7 @@ void Field::addWallBlock(const irr::io::path &blocksBackground, const irr::s32 &
     mGraphicBlocks.push_front(wallBlock);
 }
 
-bool Field::isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const
+bool SceneManager::isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const
 {
     if (!mGraphicBlocks.empty())
     {
@@ -264,7 +266,7 @@ bool Field::isCollidedWithWall(const irr::core::rect<irr::s32>& objRect) const
     return false;
 }
 
-const GraphicBlock* Field::isCollided(const irr::core::rect<irr::s32> &checkRect) const
+const GraphicBlock* SceneManager::isCollided(const irr::core::rect<irr::s32> &checkRect) const
 {
     if (!mGraphicBlocks.empty())
     {
@@ -284,4 +286,12 @@ const GraphicBlock* Field::isCollided(const irr::core::rect<irr::s32> &checkRect
         return mCharacter;
     }
     return 0;
+}
+
+void SceneManager::setCurrentScene(Scene *newScene)
+{
+    if ( mCurrentScene != newScene) {
+        delete mCurrentScene;
+        mCurrentScene = newScene;
+    }
 }

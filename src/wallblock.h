@@ -23,6 +23,9 @@ public:
                        const CollisionType& type = CanCollideType);
     ~WallBlock();
 
+    /*!
+     * ISceneNode interface implementation
+    */
     virtual void draw();
 
 private:

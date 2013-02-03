@@ -107,8 +107,8 @@ bool EventReceiver::OnEvent(const SEvent &event)
         }
     case EET_MOUSE_INPUT_EVENT:
         {
-            if (mContext.field)
-                mContext.field->newEvent(event);
+            if (mContext.sceneManager)
+                mContext.sceneManager->handleEvent(event);
             return true;
         }
     case EET_KEY_INPUT_EVENT:
@@ -119,8 +119,8 @@ bool EventReceiver::OnEvent(const SEvent &event)
             }
             else
             {
-                if (mContext.field)
-                    mContext.field->newEvent(event);
+                if (mContext.sceneManager)
+                    mContext.sceneManager->handleEvent(event);
             }
             return true;
         }

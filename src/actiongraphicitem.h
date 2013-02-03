@@ -11,6 +11,9 @@ public:
 
     virtual void newMouseEvent(const irr::SEvent& event);
 
+    /*!
+     * ISceneNode interface implementation
+    */
     virtual void draw();
 
 private:
