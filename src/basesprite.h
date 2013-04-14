@@ -1,11 +1,11 @@
 #ifndef BASESPRITE_H
 #define BASESPRITE_H
 
-#include <vector2d.h>
-#include <irrTypes.h>
-#include <irrList.h>
-#include <rect.h>
-#include <path.h>
+#include <irrlicht/vector2d.h>
+#include <irrlicht/irrTypes.h>
+#include <irrlicht/irrList.h>
+#include <irrlicht/rect.h>
+#include <irrlicht/path.h>
 
 namespace irr {
     namespace video {

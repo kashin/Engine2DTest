@@ -1,10 +1,10 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include <path.h>
-#include <irrTypes.h>
-#include <irrList.h>
-#include <rect.h>
+#include <irrlicht/path.h>
+#include <irrlicht/irrTypes.h>
+#include <irrlicht/irrList.h>
+#include <irrlicht/rect.h>
 
 namespace irr {
 namespace video {
@@ -15,6 +15,7 @@ namespace video {
 }
 
 class GraphicBlock;
+class IGestureRecognizer;
 
 //! This is a game field class.
 /** This class handles some events and moves it to appropriate objects (like characters).
@@ -57,6 +58,7 @@ private:
     irr::video::ITexture* mTexture;
     irr::core::list<GraphicBlock*> mGraphicBlocks;
     irr::core::list<GraphicBlock*> mFieldsNetGraphicBlocks;
+    irr::core::list<IGestureRecognizer*> mGestureRecognizers;
 };
 
 #endif // FIELD_H

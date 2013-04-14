@@ -18,7 +18,12 @@ SOURCES += src/main.cpp \
     src/explosionanimation2d.cpp \
     src/basesprite.cpp \
     src/explosionspriteanimator2d.cpp \
-    src/fieldnetblock.cpp
+    src/fieldnetblock.cpp \
+    src/engineapplication.cpp \
+    src/eventshandling/igesturerecognizer.cpp \
+    src/eventshandling/event.cpp \
+    src/eventshandling/lineargesturerecognizer.cpp \
+    src/eventshandling/gestureevent.cpp
 
 HEADERS += \
     src/eventreceiver.h \
@@ -33,9 +38,13 @@ HEADERS += \
     src/explosionanimation2d.h \
     src/basesprite.h \
     src/explosionspriteanimator2d.h \
-    src/fieldnetblock.h
+    src/fieldnetblock.h \
+    src/engineapplication.h \
+    src/eventshandling/igesturerecognizer.h \
+    src/eventshandling/event.h \
+    src/eventshandling/lineargesturerecognizer.h \
+    src/eventshandling/gestureevent.h
 
 OTHER_FILES += \
-    data/config.lua \
-    data/generate_field.lua \
+    data/* \
     TODO

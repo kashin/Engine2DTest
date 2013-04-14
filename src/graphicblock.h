@@ -3,11 +3,11 @@
 
 #include "animator2d.h"
 
-#include <vector2d.h>
-#include <path.h>
-#include <irrTypes.h>
-#include <irrList.h>
-#include <rect.h>
+#include <irrlicht/vector2d.h>
+#include <irrlicht/path.h>
+#include <irrlicht/irrTypes.h>
+#include <irrlicht/irrList.h>
+#include <irrlicht/rect.h>
 
 namespace irr {
     namespace video {

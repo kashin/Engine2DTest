@@ -1,7 +1,7 @@
 #ifndef EVENTRECEIVER_H
 #define EVENTRECEIVER_H
 
-#include <IEventReceiver.h>
+#include <irrlicht/IEventReceiver.h>
 
 namespace irr {
     class IrrlichtDevice;

@@ -2,9 +2,10 @@
 #include "character.h"
 #include "wallblock.h"
 #include "fieldnetblock.h"
+#include "eventshandling/lineargesturerecognizer.h"
 
 #include <QDebug>
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 
 extern "C"
 {
@@ -52,6 +53,7 @@ Field::Field(IVideoDriver* driver)
     mCharacter = new Character(mDriver);
     mCharacter->setTextureName(CHARACTER_TEXTURE_PATH);
     setBackground(BACKGROUND_TEXTURE_PATH);
+    mGestureRecognizers.push_front(new LinearGestureRecognizer());
 }
 
 
@@ -168,6 +170,16 @@ Field::~Field()
         }
         mFieldsNetGraphicBlocks.clear();
     }
+    if (!mGestureRecognizers.empty()) {
+        irr::core::list<IGestureRecognizer*>::Iterator it = mGestureRecognizers.begin();
+        irr::core::list<IGestureRecognizer*>::Iterator end = mGestureRecognizers.end();
+        while (it != end)
+        {
+            delete (*it);
+            ++it;
+        }
+        mGestureRecognizers.clear();
+    }
 }
 
 void Field::draw()
@@ -202,6 +214,19 @@ void Field::draw()
 
 void Field::newEvent(const SEvent &event)
 {
+    EventsList eventsList;
+    if (!mGestureRecognizers.empty()) {
+        irr::core::list<IGestureRecognizer*>::ConstIterator it = mGestureRecognizers.begin();
+        irr::core::list<IGestureRecognizer*>::ConstIterator end = mGestureRecognizers.end();
+        while (it != end)
+        {
+            Event* newGestureEvent = (*it)->handleScreenEvent(event);
+            if (newGestureEvent) {
+                eventsList.push_front(newGestureEvent);
+            }
+            ++it;
+        }
+    }
     if (mCharacter)
     {
         // Remove this if statement if there is no other events received by

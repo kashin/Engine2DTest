@@ -3,7 +3,7 @@
 #include "bullet.h"
 #include "actiongraphicitem.h"
 
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 #include <QDebug>
 
 extern "C"

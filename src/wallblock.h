@@ -3,11 +3,11 @@
 
 #include "graphicblock.h"
 
-#include <irrString.h>
-#include <vector2d.h>
-#include <path.h>
-#include <irrTypes.h>
-#include <irrList.h>
+#include <irrlicht/irrString.h>
+#include <irrlicht/vector2d.h>
+#include <irrlicht/path.h>
+#include <irrlicht/irrTypes.h>
+#include <irrlicht/irrList.h>
 
 namespace irr {
     namespace video {

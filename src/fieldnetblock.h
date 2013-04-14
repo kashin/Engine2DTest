@@ -2,7 +2,7 @@
 #define FIELDNETBLOCK_H
 
 #include "graphicblock.h"
-#include <SColor.h>
+#include <irrlicht/SColor.h>
 
 class FieldNetBlock : public GraphicBlock
 {
