@@ -1,3 +1,10 @@
 *.o
 *~
-*.pro.user
+*.pro.user*
+*.dll
+*lua*
+include/*
+Makefile*
+debug/*
+*.Debug
+*.Release

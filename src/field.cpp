@@ -3,6 +3,7 @@
 #include "wallblock.h"
 #include "fieldnetblock.h"
 #include "scene.h"
+#include "eventshandling/lineargesturerecognizer.h"
 
 #include <QDebug>
 #include <irrlicht/irrlicht.h>
@@ -54,6 +55,7 @@ SceneManager::SceneManager(IVideoDriver* driver)
     mCharacter = new Character(mDriver);
     mCharacter->setTextureName(CHARACTER_TEXTURE_PATH);
     setBackground(BACKGROUND_TEXTURE_PATH);
+    mGestureRecognizers.push_front(new LinearGestureRecognizer());
 }
 
 
@@ -138,7 +140,7 @@ void SceneManager::addFieldNet()
     }
 }
 
-void SceneManager::deleteField()
+void SceneManager::deleteSceneManager()
 {
     if (!field)
         delete field;
@@ -169,6 +171,16 @@ SceneManager::~SceneManager()
             ++it;
         }
         mFieldsNetGraphicBlocks.clear();
+    }
+    if (!mGestureRecognizers.empty()) {
+        irr::core::list<IGestureRecognizer*>::Iterator it = mGestureRecognizers.begin();
+        irr::core::list<IGestureRecognizer*>::Iterator end = mGestureRecognizers.end();
+        while (it != end)
+        {
+            delete (*it);
+            ++it;
+        }
+        mGestureRecognizers.clear();
     }
 }
 
@@ -204,6 +216,19 @@ void SceneManager::draw()
 
 void SceneManager::handleEvent(const SEvent &event)
 {
+    EventsList eventsList;
+    if (!mGestureRecognizers.empty()) {
+        irr::core::list<IGestureRecognizer*>::ConstIterator it = mGestureRecognizers.begin();
+        irr::core::list<IGestureRecognizer*>::ConstIterator end = mGestureRecognizers.end();
+        while (it != end)
+        {
+            Event* newGestureEvent = (*it)->handleScreenEvent(event);
+            if (newGestureEvent) {
+                eventsList.push_front(newGestureEvent);
+            }
+            ++it;
+        }
+    }
     if (mCharacter)
     {
         // Remove this if statement if there is no other events received by

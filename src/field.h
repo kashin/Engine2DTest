@@ -18,6 +18,7 @@ namespace video {
 
 class GraphicBlock;
 class Scene;
+class IGestureRecognizer;
 
 //! This is a game field class.
 /** This class handles some events and moves it to appropriate objects (like characters).
@@ -28,7 +29,7 @@ class SceneManager: public ISceneNode
 public:
     static SceneManager & instance();
     static SceneManager & createSceneManager(irr::video::IVideoDriver* driver);
-    static void deleteField();
+    static void deleteSceneManager();
     virtual ~SceneManager();
 
     virtual void handleEvent(const irr::SEvent& event);
@@ -64,6 +65,7 @@ private:
     irr::video::ITexture* mTexture;
     irr::core::list<GraphicBlock*> mGraphicBlocks;
     irr::core::list<GraphicBlock*> mFieldsNetGraphicBlocks;
+    irr::core::list<IGestureRecognizer*> mGestureRecognizers;
 };
 
 #endif // FIELD_H

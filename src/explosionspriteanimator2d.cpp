@@ -18,7 +18,7 @@ ExplosionSpriteAnimator2D::ExplosionSpriteAnimator2D(irr::core::vector2d<irr::s3
       mFinished(false),
       mPosition(position),
       mSprite(0)
-{    
+{
     // getting some config values from config lua script
     lua_State* luaState = luaL_newstate();
     if (!luaState)
