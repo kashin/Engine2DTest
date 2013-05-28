@@ -1,3 +1,4 @@
+1) Start using a backlog, etc.
 6) This project needs a big refactorization. I need to create a good node's tree logic to be able to fix collision detections, etc.
 9) Add Field's net and replace 'by pixel' movement with 'net' movement.
 10) If any wall or character are placed out of the "net brick" border, then it should be moved appropriately.
