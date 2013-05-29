@@ -2,6 +2,7 @@
 
 #include "eventreceiver.h"
 #include "scenemanager.h"
+#include "eventshandling/lineargesturerecognizer.h"
 
 #include <irrlicht/irrlicht.h>
 
@@ -22,8 +23,28 @@ using namespace io;
 using namespace gui;
 // end of "Don't do this ever again... :)"
 
+static EngineApplication* application = NULL;
+
 EngineApplication::EngineApplication()
+    : mSceneManager(0)
 {
+}
+
+EngineApplication::~EngineApplication()
+{
+    if (mSceneManager) {
+        delete mSceneManager;
+    }
+    if (!mGestureRecognizers.empty()) {
+        irr::core::list<IGestureRecognizer*>::Iterator it = mGestureRecognizers.begin();
+        irr::core::list<IGestureRecognizer*>::Iterator end = mGestureRecognizers.end();
+        while (it != end)
+        {
+            delete (*it);
+            ++it;
+        }
+        mGestureRecognizers.clear();
+    }
 }
 
 int EngineApplication::start()
@@ -59,14 +80,17 @@ int EngineApplication::start()
 //    scene::ISceneManager* scene = device->getSceneManager(); // we are always can show any 3D mesh with 2D graphic
 //    IGUIEnvironment* env = device->getGUIEnvironment();
 
-    // Store the appropriate data in a context structure.
 
-    SceneManager& sceneManager = SceneManager::createSceneManager(driver);
+    SceneManager* sceneManager = SceneManager::createSceneManager(driver);
+    setSceneManager(sceneManager);
+    addGestureRecognizer(new LinearGestureRecognizer());
+
+    // Store the appropriate data in a context structure.
     SAppContext context;
     context.device = device;
     context.counter = 0;
     context.listbox = 0;
-    context.sceneManager = &sceneManager;
+    context.engineApplication = this;
 
     // Then create the event receiver, giving it that context structure.
     EventReceiver receiver(context);
@@ -90,15 +114,67 @@ int EngineApplication::start()
         {
             driver->beginScene(true, true, SColor(0,200,200,200));
 
-            sceneManager.draw();
+            draw();
 
             driver->endScene();
         }
     }
 
-    context.sceneManager = 0;
-    SceneManager::deleteSceneManager();
+    context.engineApplication = 0;
     device->drop();
 
     return 0;
+}
+
+void EngineApplication::setSceneManager(SceneManager *sceneManager)
+{
+    if (mSceneManager && mSceneManager != sceneManager) {
+        delete mSceneManager;
+    }
+    mSceneManager = sceneManager;
+}
+
+void EngineApplication::addGestureRecognizer(IGestureRecognizer *recognizer)
+{
+    irr::core::list<IGestureRecognizer*>::Iterator it = mGestureRecognizers.begin();
+    while (it != mGestureRecognizers.end()) {
+        if (*it == recognizer) {
+            return;
+        }
+    }
+    mGestureRecognizers.push_front(recognizer);
+}
+
+bool EngineApplication::handleEvent(const SEvent &event)
+{
+    EventsList eventsList;
+    if (!mGestureRecognizers.empty()) {
+        irr::core::list<IGestureRecognizer*>::ConstIterator it = mGestureRecognizers.begin();
+        irr::core::list<IGestureRecognizer*>::ConstIterator end = mGestureRecognizers.end();
+        while (it != end)
+        {
+            Event* newGestureEvent = (*it)->handleIrrEvent(event);
+            if (newGestureEvent) {
+                eventsList.push_front(newGestureEvent);
+            }
+            ++it;
+        }
+    }
+    return mSceneManager->handleEvent(event);
+}
+
+EngineApplication &EngineApplication::instance()
+{
+    if (!application)
+    {
+        application = new EngineApplication();
+    }
+    return *application;
+}
+
+void EngineApplication::draw()
+{
+    if (mSceneManager) {
+        mSceneManager->draw();
+    }
 }

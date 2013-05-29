@@ -14,9 +14,12 @@ public:
     /**
      * IGestureRecognizer implementation
      */
-    virtual Event* handleScreenEvent(const irr::SEvent & event);
+    virtual Event* handleIrrEvent(const irr::SEvent & event);
 
 protected:
     virtual bool isGestureRecognized();
+
+private:
+    void updateEventsList();
 };
 #endif // LINEARGESTURERECOGNIZER_H

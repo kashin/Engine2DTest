@@ -27,8 +27,10 @@ public:
      * \brief handleEvent method that handles device's input.
      *  Passes events to childs if it is not processed.
      * \param event event that should be processed
+     *
+     * \return @c true if event was processed and @c false otherwise
      */
-    virtual void handleEvent(const irr::SEvent& event);
+    virtual bool handleEvent(const irr::SEvent& event);
 
     /*!
      * \brief getParent returns parent's node

@@ -10,7 +10,7 @@ public:
         Linear = 0
     };
 
-    GestureEvent(Type gestureType);
+    GestureEvent(Type gestureType, irr::SEvent event);
 
     Type getGestureType() { return mGestureType; }
 

@@ -6,5 +6,6 @@
 include/*
 Makefile*
 debug/*
+release/*
 *.Debug
 *.Release

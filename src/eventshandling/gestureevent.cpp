@@ -1,7 +1,7 @@
 #include "gestureevent.h"
 
-GestureEvent::GestureEvent(Type gestureType)
-    : Event(Gesture),
+GestureEvent::GestureEvent(Type gestureType, irr::SEvent event)
+    : Event(Gesture, event),
       mGestureType(gestureType)
 {
 }

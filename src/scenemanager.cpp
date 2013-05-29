@@ -55,7 +55,6 @@ SceneManager::SceneManager(IVideoDriver* driver)
     mCharacter = new Character(mDriver);
     mCharacter->setTextureName(CHARACTER_TEXTURE_PATH);
     setBackground(BACKGROUND_TEXTURE_PATH);
-    mGestureRecognizers.push_front(new LinearGestureRecognizer());
 }
 
 
@@ -64,14 +63,14 @@ SceneManager & SceneManager::instance()
     return *manager;
 }
 
-SceneManager & SceneManager::createSceneManager(irr::video::IVideoDriver *driver)
+SceneManager* SceneManager::createSceneManager(irr::video::IVideoDriver *driver)
 {
     if (!manager)
     {
         manager = new SceneManager(driver);
         manager->init();
     }
-    return *manager;
+    return manager;
 }
 
 void SceneManager::init()
@@ -172,16 +171,6 @@ SceneManager::~SceneManager()
         }
         mFieldsNetGraphicBlocks.clear();
     }
-    if (!mGestureRecognizers.empty()) {
-        irr::core::list<IGestureRecognizer*>::Iterator it = mGestureRecognizers.begin();
-        irr::core::list<IGestureRecognizer*>::Iterator end = mGestureRecognizers.end();
-        while (it != end)
-        {
-            delete (*it);
-            ++it;
-        }
-        mGestureRecognizers.clear();
-    }
 }
 
 void SceneManager::draw()
@@ -214,31 +203,17 @@ void SceneManager::draw()
     mCharacter->drawAll();
 }
 
-void SceneManager::handleEvent(const SEvent &event)
+bool SceneManager::handleEvent(const SEvent &event)
 {
-    EventsList eventsList;
-    if (!mGestureRecognizers.empty()) {
-        irr::core::list<IGestureRecognizer*>::ConstIterator it = mGestureRecognizers.begin();
-        irr::core::list<IGestureRecognizer*>::ConstIterator end = mGestureRecognizers.end();
-        while (it != end)
-        {
-            Event* newGestureEvent = (*it)->handleScreenEvent(event);
-            if (newGestureEvent) {
-                eventsList.push_front(newGestureEvent);
-            }
-            ++it;
-        }
-    }
     if (mCharacter)
     {
-        // Remove this if statement if there is no other events received by
-        // Field in the future.
         if (event.EventType == EET_MOUSE_INPUT_EVENT ||
                 event.EventType == EET_KEY_INPUT_EVENT)
         {
             mCharacter->newEvent(event);
         }
     }
+    return true;
 }
 
 void SceneManager::setBackground(const path& backgroundPath)

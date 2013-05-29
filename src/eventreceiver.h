@@ -10,7 +10,7 @@ namespace irr {
     }
 }
 
-class SceneManager;
+class EngineApplication;
 // Declare a structure to hold some context for the event receiver so that it
 // has it available inside its OnEvent() method.
 
@@ -19,7 +19,7 @@ struct SAppContext
         irr::IrrlichtDevice* device;
         irr::s32 counter;
         irr::gui::IGUIListBox *listbox;
-        SceneManager* sceneManager;
+        EngineApplication* engineApplication;
 };
 
 // Define some values that we'll use to identify individual GUI controls.

@@ -14,7 +14,7 @@ public:
      * @brief handleScreenEvent
      * @return NULL if gesture is not recognized or if it is not finished and Event object otherwise.
      */
-    virtual Event* handleScreenEvent(const irr::SEvent & event) = 0;
+    virtual Event* handleIrrEvent(const irr::SEvent & event) = 0;
 
 protected:
     /*!

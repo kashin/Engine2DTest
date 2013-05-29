@@ -28,11 +28,11 @@ class SceneManager: public ISceneNode
 {
 public:
     static SceneManager & instance();
-    static SceneManager & createSceneManager(irr::video::IVideoDriver* driver);
+    static SceneManager* createSceneManager(irr::video::IVideoDriver* driver);
     static void deleteSceneManager();
     virtual ~SceneManager();
 
-    virtual void handleEvent(const irr::SEvent& event);
+    virtual bool handleEvent(const irr::SEvent& event);
     virtual void draw();
 
     void setBackground(const irr::io::path& backgroundPath);
@@ -65,7 +65,6 @@ private:
     irr::video::ITexture* mTexture;
     irr::core::list<GraphicBlock*> mGraphicBlocks;
     irr::core::list<GraphicBlock*> mFieldsNetGraphicBlocks;
-    irr::core::list<IGestureRecognizer*> mGestureRecognizers;
 };
 
 #endif // SCENEMANAGER_H

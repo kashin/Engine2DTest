@@ -1,5 +1,5 @@
 #include "eventreceiver.h"
-#include "field.h"
+#include "engineapplication.h"
 #include <irrlicht/irrlicht.h>
 
 using namespace irr;
@@ -21,30 +21,9 @@ EventReceiver::~EventReceiver()
 
 bool EventReceiver::OnEvent(const SEvent &event)
 {
-    switch(event.EventType)
+    if (mContext.engineApplication)
     {
-    case EET_MOUSE_INPUT_EVENT:
-        {
-            if (mContext.sceneManager)
-                mContext.sceneManager->handleEvent(event);
-            return true;
-        }
-    case EET_KEY_INPUT_EVENT:
-        {
-            if (event.KeyInput.Key == KEY_ESCAPE)
-            {
-                mContext.device->closeDevice();
-            }
-            else
-            {
-                if (mContext.sceneManager)
-                    mContext.sceneManager->handleEvent(event);
-            }
-            return true;
-        }
-    default:
-         break;
+        return mContext.engineApplication->handleEvent(event);
     }
     return false;
-
 }

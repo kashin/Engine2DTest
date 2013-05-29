@@ -2,7 +2,6 @@
 
 int main()
 {
-    EngineApplication* app = new EngineApplication();
-    int result = app->start();
+    int result = EngineApplication::instance().start();
     return result;
 }

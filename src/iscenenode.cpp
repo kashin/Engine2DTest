@@ -28,9 +28,10 @@ void ISceneNode::draw()
     }
 }
 
-void ISceneNode::handleEvent(const irr::SEvent &/*event*/)
+bool ISceneNode::handleEvent(const irr::SEvent &/*event*/)
 {
     // default Scene Node ignores events
+    return false;
 }
 
 ISceneNode *ISceneNode::getParent()

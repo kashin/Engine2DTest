@@ -1,4 +1,4 @@
-#include "field.h"
+#include "scenemanager.h"
 #include "movetoanimator2d.h"
 #include "character.h"
 
