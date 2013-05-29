@@ -1,5 +1,5 @@
-#ifndef FIELD_H
-#define FIELD_H
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
 
 #include <irrlicht/path.h>
 #include <irrlicht/irrTypes.h>
@@ -68,4 +68,4 @@ private:
     irr::core::list<IGestureRecognizer*> mGestureRecognizers;
 };
 
-#endif // FIELD_H
+#endif // SCENEMANAGER_H
