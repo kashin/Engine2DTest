@@ -1,7 +1,7 @@
 #include "engineapplication.h"
 
 #include "eventreceiver.h"
-#include "field.h"
+#include "scenemanager.h"
 
 #include <irrlicht/irrlicht.h>
 

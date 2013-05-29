@@ -1,4 +1,4 @@
-#include "field.h"
+#include "scenemanager.h"
 #include "character.h"
 #include "wallblock.h"
 #include "fieldnetblock.h"
@@ -25,7 +25,7 @@ using namespace io;
 #define CHARACTER_TEXTURE_PATH "data/t90.jpg"
 #define BACKGROUND_TEXTURE_PATH "data/background.jpg"
 
-static SceneManager* field = NULL;
+static SceneManager* manager = NULL;
 
 
 // Wrapper to call from lua script to add a WallBlock
@@ -61,17 +61,17 @@ SceneManager::SceneManager(IVideoDriver* driver)
 
 SceneManager & SceneManager::instance()
 {
-    return *field;
+    return *manager;
 }
 
 SceneManager & SceneManager::createSceneManager(irr::video::IVideoDriver *driver)
 {
-    if (!field)
+    if (!manager)
     {
-        field = new SceneManager(driver);
-        field->init();
+        manager = new SceneManager(driver);
+        manager->init();
     }
-    return *field;
+    return *manager;
 }
 
 void SceneManager::init()
@@ -142,8 +142,8 @@ void SceneManager::addFieldNet()
 
 void SceneManager::deleteSceneManager()
 {
-    if (!field)
-        delete field;
+    if (!manager)
+        delete manager;
 }
 
 SceneManager::~SceneManager()

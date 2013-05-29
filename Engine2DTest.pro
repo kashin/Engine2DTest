@@ -8,7 +8,6 @@ INCLUDEPATH += ./include
 SOURCES += src/main.cpp \
     src/eventreceiver.cpp \
     src/character.cpp \
-    src/field.cpp \
     src/animator2d.cpp \
     src/movetoanimator2d.cpp \
     src/wallblock.cpp \
@@ -25,12 +24,12 @@ SOURCES += src/main.cpp \
     src/eventshandling/igesturerecognizer.cpp \
     src/eventshandling/event.cpp \
     src/eventshandling/lineargesturerecognizer.cpp \
-    src/eventshandling/gestureevent.cpp
+    src/eventshandling/gestureevent.cpp \
+    src/scenemanager.cpp
 
 HEADERS += \
     src/eventreceiver.h \
     src/character.h \
-    src/field.h \
     src/animator2d.h \
     src/movetoanimator2d.h \
     src/wallblock.h \
@@ -47,7 +46,8 @@ HEADERS += \
     src/eventshandling/igesturerecognizer.h \
     src/eventshandling/event.h \
     src/eventshandling/lineargesturerecognizer.h \
-    src/eventshandling/gestureevent.h
+    src/eventshandling/gestureevent.h \
+    src/scenemanager.h
 
 OTHER_FILES += \
     data/* \
